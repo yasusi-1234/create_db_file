@@ -60,7 +60,7 @@ public class ExcelInformationReader {
      */
     public void saveExcelFile(InputStream in, String newFilePath){
         try(Workbook workbook = WorkbookFactory.create(in);
-            FileOutputStream out = new FileOutputStream(newFilePath);
+            FileOutputStream out = new FileOutputStream(newFilePath)
         ){
             workbook.write(out);
         }catch (IOException e){
@@ -124,7 +124,7 @@ public class ExcelInformationReader {
      * @return form情報から作成したinsert分の左側の部分
      */
     private String makeInsertTemplateLeft(DBColumnsForm form){
-        String columnName = form.getColumns().stream().filter(col -> col.isInclude())
+        String columnName = form.getColumns().stream().filter(DBColumn::isInclude)
                 .map(col -> StringUtils.hasText(col.getChangeColumnName()) ? col.getChangeColumnName() : col.getColumnName())
                 .collect(Collectors.joining(","));
         return "INSERT INTO " + form.getTableName() + " (" + columnName + ") VALUES(";
@@ -152,9 +152,7 @@ public class ExcelInformationReader {
             case FORMULA:
                 return cell.getCellFormula();
             case BLANK:
-                return "";
             case _NONE:
-                return "";
             case ERROR:
                 return "";
         }
