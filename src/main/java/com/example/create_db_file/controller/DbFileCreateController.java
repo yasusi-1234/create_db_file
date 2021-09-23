@@ -127,9 +127,13 @@ public class DbFileCreateController {
                             @ModelAttribute("userSession") UserSession userSession,
                             RedirectAttributes redirectAttributes,
                             UriComponentsBuilder uriComponentsBuilder){
-        File temporalFile = new File(userSession.getTemporalFilePath());
-        if(temporalFile.exists()){
-            temporalFile.delete();
+
+        if(userSession != null){
+            // セッション切れになっていない
+            File temporalFile = new File(userSession.getTemporalFilePath());
+            if(temporalFile.exists()){
+                temporalFile.delete();
+            }
         }
         sessionStatus.setComplete();
         redirectAttributes.addFlashAttribute("message", "ご利用ありがとうございました!!");
