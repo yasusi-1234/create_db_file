@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Custom</title>
+</head>
+<body>
+    <h1>Custom</h1>
+    <div>
+        <form action="#" th:action="@{/create}" th:object="${dBColumnsForm}" method="post">
+            <div>
+                <div th:if="${#fields.hasErrors('fileName')}"
+                     th:errors="*{fileName}" style="color: red;"></div>
+                <div>※ファイル名を指定しなかった場合はsample.sqlになります※</div>
+                <label for="fileName">ファイル名:</label>
+                <input type="text" th:field="*{fileName}" id="fileName">
+            </div>
+            <div>
+                <div th:if="${#fields.hasErrors('tableName')}"
+                     th:errors="*{tableName}" style="color: red;"></div>
+                <label for="tableName">テーブル名:</label>
+                <input type="text" th:field="*{tableName}" id="tableName">
+            </div>
+            <div th:if="${#fields.hasErrors('columns')}"
+                 th:errors="*{columns}" style="color: red;"></div>
+            <div th:each="col, stat : *{columns}">
+                <div>
+                    <input type="hidden" th:field="*{columns[__${stat.index}__].columnName}">
+                    <input type="hidden" th:field="*{columns[__${stat.index}__].columnIndex}">
+                    <label th:for="${col.columnIndex}" th:text="|${col.columnIndex}:${col.columnName}|"></label>
+                    <br>
+                    <label th:for="${col.columnIndex}">カラム設定:</label>
+                    <input type="text" th:field="*{columns[__${stat.index}__].changeColumnName}" th:id="${col.columnIndex}">
+                    <span>※カラム名を変更したい場合は代替カラム名を入力してください</span>
+                    <br>
+                    <input type="radio" th:name="${col.columnIndex}" th:text="この行を含む" th:value="true" th:field="*{columns[__${stat.index}__].include}">
+                    <input type="radio" th:name="${col.columnIndex}" th:text="この行を除外" th:value="false" th:field="*{columns[__${stat.index}__].include}">
+                    <br>
+                    <input th:each="ct: ${columnType}" type="radio" th:name="${ct}" th:text="${ct.name()}" th:value="${ct.name()}" th:field="*{columns[__${stat.index}__].type}">
+
+                </div>
+            </div>
+            <input type="submit" value="この内容で作成" name="create">
+            <input type="submit" value="処理を終了" name="endCreate">
+        </form>
+    </div>
+
+    <div th:object="${dBColumnsForm}">
+        <ul th:each="col : *{columns}">
+            <li th:text="|${col.columnIndex} , ${col.columnName}|"></li>
+        </ul>
+    </div>
+</body>
+</html>
