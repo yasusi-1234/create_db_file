@@ -9,6 +9,7 @@
 </head>
 <body>
     <h1>Custom</h1>
+    <hr>
     <div>
         <form action="#" th:action="@{/create}" th:object="${dBColumnsForm}" method="post">
             <div>
@@ -26,8 +27,14 @@
             </div>
             <div th:if="${#fields.hasErrors('columns')}"
                  th:errors="*{columns}" style="color: red;"></div>
+            <hr>
+            <div>
+                添付されたファイルから以下のカラム情報が見つかりました
+                <span th:text="| ※*{columns.size()}件のデータ※ |"></span>
+            </div>
+
             <div th:each="col, stat : *{columns}">
-                <div>
+                <div style="border: 1px solid gray;">
                     <input type="hidden" th:field="*{columns[__${stat.index}__].columnName}">
                     <input type="hidden" th:field="*{columns[__${stat.index}__].columnIndex}">
                     <label th:for="${col.columnIndex}" th:text="|${col.columnIndex}:${col.columnName}|"></label>
@@ -48,10 +55,10 @@
         </form>
     </div>
 
-    <div th:object="${dBColumnsForm}">
-        <ul th:each="col : *{columns}">
-            <li th:text="|${col.columnIndex} , ${col.columnName}|"></li>
-        </ul>
-    </div>
+<!--    <div th:object="${dBColumnsForm}">-->
+<!--        <ul th:each="col : *{columns}">-->
+<!--            <li th:text="|${col.columnIndex} , ${col.columnName}|"></li>-->
+<!--        </ul>-->
+<!--    </div>-->
 </body>
 </html>
