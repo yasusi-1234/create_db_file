@@ -1,0 +1,2 @@
+# create_db_file
+ExcelファイルからDBのInsert文を作成するアプリケーション
