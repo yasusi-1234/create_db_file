@@ -1,0 +1,22 @@
+.font-md{
+    font-size: 18px;
+}
+
+.mb-sm{
+    margin-bottom: 8px;
+}
+
+.header{
+    &__inner{
+        & .top-menu{
+            & > ul{
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                & > li{
+                    margin-right: 20px;
+                }
+            }
+        }
+    }
+}

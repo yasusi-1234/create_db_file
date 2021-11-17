@@ -1,0 +1,194 @@
+.font-md{
+    font-size: 18px;
+}
+
+.mb-sm{
+    margin-bottom: 8px;
+}
+
+.font-title{
+    font-size: 24px;
+}
+
+.font-desc{
+    font-size: 16px;
+}
+
+.font-error{
+    font-size: 15px;
+}
+
+.form-pa-ma{
+    padding: 10px;
+    margin: 10px;
+}
+
+.font-heading{
+    font-size: 18px;
+    padding-left: 7px;
+    border-left: 6px solid #5e5e81;
+}
+
+.font-h3{
+    font-size: 16px;
+    padding-left: 7px;
+    border-left: 5px solid #337c11;
+}
+
+.font-wait{
+    font-size: 22px;
+}
+
+.main{
+
+    &__top{
+        margin: 10px 20px;
+        & .title{
+            margin-bottom: 10px;
+            text-align: left;
+        }
+        &__title{
+            margin-top: 7px;
+            border-bottom: 3px solid rgba(189, 83, 83, 0.6);
+            border-top: 3px solid rgba(189, 83, 83, 0.6);
+        }
+
+        & .description{
+            margin: 0 0 0 10px;
+            width: 400px;
+        }
+
+        &__description{
+            margin-bottom: 20px;
+        }
+    }
+}
+
+.sample{
+    margin-left: 12px;
+    margin-bottom: 14px;
+}
+
+.form-area{
+    & .form{
+        margin-left: 10px;
+        text-align: left;
+        &__error{
+            margin: 0 0 4px 0;
+            max-width: 400px;
+        }
+    }
+
+    & .form-heading{
+        text-align: left;
+    }
+    
+    & .custom-form{
+        & .form__error{
+            
+            margin-bottom: 8px;
+        }
+
+        &__warn{
+            margin-bottom: 5px;
+            & > span {
+                font-size: 18px;
+            }
+        }
+
+        &__find{
+            font-size: 15px;
+        }
+
+        & .form-block{
+            &__item{
+                & .column-name{
+                    & > input{
+                        width: auto;
+                    }
+                }
+            }
+        }
+    }
+
+    & .btn-area{
+        & .btn-fill{
+            margin: 12px 0;
+        }
+    }
+}
+
+.use-info{
+
+    &-container{
+        text-align: left;
+    }
+
+    & .info-heading{
+        text-align: left;
+    }
+
+    & .info-item-title{
+        margin-left: 10px;
+    }
+}
+
+.item-content{
+    margin-left: 12px;
+}
+
+.item-content-img{
+    display: block;
+
+    margin-bottom: 15px;
+    
+    & .img-cover{
+        display: block;
+        height: 200px;
+        width: 448px;
+    
+        & > img{
+            height: 200px;
+        }
+        
+    }
+}
+
+.arrow{
+    margin: 30px;
+
+    &-inner{
+        width: 50px;
+        height: 50px;
+    }
+}
+
+.p-btm{
+    margin-bottom: 12px;
+}
+
+.thanks{
+    margin-bottom: 8px;
+    text-align: left;
+    margin-left: 12px;
+}
+
+.wait-screen{
+    
+    &__container{
+        height: 300px;
+        width: 300px;
+    }
+
+    & .wait-str{
+        margin-bottom: 10px;
+    }
+
+    & .wait-anime{
+        & > span{
+            width: 20px;
+            height: 20px;
+            margin: 0 3px;
+        }
+    }
+}

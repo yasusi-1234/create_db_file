@@ -1,0 +1,21 @@
+.font-md{
+    font-size: 20px;
+}
+
+.header{
+    &__inner{
+        & .logo{
+            height: 70px;
+            width: 200px;
+        }
+
+        & .top-menu{
+            & > ul{
+                
+                & > li{
+                    margin-right: 30px;
+                }
+            }
+        }
+    }
+}

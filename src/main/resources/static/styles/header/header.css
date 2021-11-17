@@ -1,0 +1,117 @@
+.font-md, .header__inner .top-menu > ul {
+  font-size: 15px;
+}
+
+.mb-sm, .header {
+  margin-bottom: 5px;
+}
+
+.header {
+  border-bottom: 2px solid rgba(0, 0, 0, 0.3);
+}
+
+.header__inner {
+  padding: 6px 10px 5px 10px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.header__inner .logo {
+  height: 50px;
+  width: 150px;
+}
+
+.header__inner .logo__img {
+  max-width: 100%;
+}
+
+.header__inner .top-menu {
+  display: none;
+}
+
+.header__inner .top-menu > ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.header__inner .top-menu > ul > li {
+  margin-right: 10px;
+}
+
+.header__inner .top-menu > ul > li > a {
+  text-decoration: none !important;
+}
+
+@media (min-width: 480px) {
+  .font-md, .header__inner .top-menu > ul {
+    font-size: 18px;
+  }
+  .mb-sm, .header {
+    margin-bottom: 8px;
+  }
+  .header__inner .top-menu > ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .header__inner .top-menu > ul > li {
+    margin-right: 20px;
+  }
+}
+
+@media (min-width: 600px) {
+  .mb-sm, .header {
+    margin-bottom: 18px;
+  }
+  .header__inner .logo {
+    height: 60px;
+    width: 180px;
+  }
+  .header__inner .top-menu {
+    display: block;
+  }
+  .header__inner .top-menu > ul > li {
+    margin-right: 25px;
+  }
+  .header__inner .nav-area {
+    display: none;
+  }
+}
+
+@media (min-width: 960px) {
+  .font-md, .header__inner .top-menu > ul {
+    font-size: 20px;
+  }
+  .header__inner .logo {
+    height: 70px;
+    width: 200px;
+  }
+  .header__inner .top-menu > ul > li {
+    margin-right: 30px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .font-md, .header__inner .top-menu > ul {
+    font-size: 24px;
+  }
+  .header__inner .logo {
+    height: 80px;
+    width: 240px;
+  }
+  .header__inner .top-menu > ul > li {
+    margin-right: 50px;
+  }
+}
+/*# sourceMappingURL=header.css.map */

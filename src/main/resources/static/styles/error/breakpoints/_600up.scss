@@ -1,0 +1,40 @@
+.error-title{
+    font-size: 55px;
+    margin: 40px 0;
+}
+
+.error-string{
+    font-size: 20px;
+}
+
+.content-width{
+    max-width: 660px;
+    width: 90%;
+    margin: 30px auto;
+}
+
+.error-content{
+
+    &__time{
+        font-size: 25px;
+    }
+
+    & .btn-area{
+        margin-top: 10px;
+        & > a{
+            margin: 0;
+            display: inline-block;
+
+            &:first-child{
+                margin-right: 20px;
+            }
+        }
+
+        & .btn-fill{
+            width: 120px;
+            height: 50px;
+            font-size: 20px;
+        }
+    }
+
+}
