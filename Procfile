@@ -1,1 +1,1 @@
-web: java -Dserver.port=$PORT -jar target/*.jar --server.port=$PORT --spring.profiles.active=heroku
+web: java -Dserver.port=$PORT $JAVA_OPTS -jar build/libs/create_db_file-0.0.1-SNAPSHOT.jar
