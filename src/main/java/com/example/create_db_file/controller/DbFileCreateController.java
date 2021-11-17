@@ -5,17 +5,17 @@ import com.example.create_db_file.controller.form.DBColumnsForm;
 import com.example.create_db_file.controller.form.OriginalDataFileForm;
 import com.example.create_db_file.controller.session.UserSession;
 import com.example.create_db_file.service.DbFileCreateService;
+import com.example.create_db_file.utils.CommonUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.FileUrlResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -32,10 +32,11 @@ import java.util.Objects;
 @Controller
 @RequiredArgsConstructor
 @SessionAttributes(types = {UserSession.class})
+@Slf4j
 public class DbFileCreateController {
 
     @ModelAttribute("userSession")
-    public UserSession userSession(){
+    public UserSession userSession() {
         return new UserSession();
     }
 
@@ -43,29 +44,37 @@ public class DbFileCreateController {
 
     @GetMapping("/home")
     public String getHome(
-            @ModelAttribute("originalDataFileForm")OriginalDataFileForm form,
-                          Model model){
+            @RequestParam(name = "useInfo", defaultValue = "false") boolean useInfo,
+            @ModelAttribute("originalDataFileForm") OriginalDataFileForm form,
+            Model model) {
+        model.addAttribute("useInfo", useInfo);
         return "home";
+    }
+
+    @GetMapping("/getSample")
+    public String getSampleData(){
+        return "dataFileView";
     }
 
     @PostMapping("/upload")
     public String postUpload(
-            @Validated @ModelAttribute("originalDataFileForm")OriginalDataFileForm form,
+            @Validated @ModelAttribute("originalDataFileForm") OriginalDataFileForm form,
             BindingResult bindingResult,
             Model model,
-            @ModelAttribute("userSession")UserSession userSession,
-            @ModelAttribute("dBColumnsForm")DBColumnsForm dbColumnsForm){
-        if(bindingResult.hasErrors()){
+            @ModelAttribute("userSession") UserSession userSession,
+            @ModelAttribute("dBColumnsForm") DBColumnsForm dbColumnsForm,
+            UriComponentsBuilder uriComponentsBuilder) {
+        if (bindingResult.hasErrors()) {
             return "home";
         }
 
-        try(InputStream in = form.getMultipartFile().getInputStream()){
+        try (InputStream in = form.getMultipartFile().getInputStream()) {
             Map<Integer, String> resultMap = dbFileCreateService.findHeader(in);
-            System.out.println(resultMap);
-            if(resultMap.isEmpty()){
+
+            if (resultMap.isEmpty()) {
                 // ヘッダーの値が設定されていない、またはデータ部分が無い場合(処理できない為)
                 model.addAttribute("noHeader",
-                        "ヘッダーの値が読み取れないか、あるいはデータが情報が不足しています。ファイルを確認してください。");
+                        "※ヘッダーの値が読み取れないか、あるいはデータが情報が不足しています。ファイルを確認してください。");
                 return "home";
             }
 
@@ -74,43 +83,72 @@ public class DbFileCreateController {
             String temporalFileName = dbFileCreateService
                     .fileToSaveTemporarily(form.getMultipartFile().getInputStream(),
                             form.getMultipartFile().getOriginalFilename());
-            System.out.println(temporalFileName);
 
-            if(Objects.nonNull(userSession.getTemporalFilePath())
-            && Files.exists(Path.of(userSession.getTemporalFilePath()))){
+            if (Objects.nonNull(userSession.getTemporalFilePath())
+                    && Files.exists(Path.of(userSession.getTemporalFilePath()))) {
                 // セッションに既にファイルがpathが格納されている、かつファイルも存在する
                 Files.delete(Path.of(userSession.getTemporalFilePath()));
             }
 
             userSession.setTemporalFilePath(temporalFileName);
-            // 新しいFormモデルに値を格納する処理
-            createDBColumnsForm(dbColumnsForm, resultMap);
-            model.addAttribute("columnType", DBColumn.ColumnType.values());
 
-            return "custom";
-        }catch (IOException e){
+            String redirectPath = MvcUriComponentsBuilder.relativeTo(uriComponentsBuilder)
+                    .withMappingName("DFCC#getUpload").encode().build();
+
+            return "redirect:" + redirectPath;
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return "home";
     }
 
+    @GetMapping(path = "/upload")
+    public String getUpload(
+            @Validated @ModelAttribute("originalDataFileForm") OriginalDataFileForm form,
+            BindingResult bindingResult,
+            Model model,
+            @ModelAttribute("userSession") UserSession userSession,
+            @ModelAttribute("dBColumnsForm") DBColumnsForm dbColumnsForm) {
+        if (!StringUtils.hasText(userSession.getTemporalFilePath())) {
+            return "home";
+        }
+
+        try {
+            Resource fileResource = new FileUrlResource(userSession.getTemporalFilePath());
+
+            String simpleFileName = CommonUtils.getResourceSimpleFileName(fileResource);
+
+            dbColumnsForm.setTableName(simpleFileName);
+
+            Map<Integer, String> resultMap = dbFileCreateService.findHeader(fileResource.getInputStream());
+
+            model.addAttribute("columnType", DBColumn.ColumnType.values());
+            createDBColumnsForm(dbColumnsForm, resultMap);
+            return "custom";
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "home";
+        }
+
+
+    }
+
     @PostMapping(path = "create", params = "create")
     public String createRequest(
-            @Validated @ModelAttribute("dBColumnsForm")DBColumnsForm dBColumnsForm,
+            @Validated @ModelAttribute("dBColumnsForm") DBColumnsForm dBColumnsForm,
             BindingResult bindingResult,
-            @ModelAttribute("userSession")UserSession userSession,
-            Model model){
+            @ModelAttribute("userSession") UserSession userSession,
+            @ModelAttribute("originalDataFileForm") OriginalDataFileForm form,
+            Model model) {
         model.addAttribute("columnType", DBColumn.ColumnType.values());
 
-        if(bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             return "custom";
         }
-        System.out.println(dBColumnsForm);
-        Resource fileResource = null;
-        String insertSentence = null;
-        try{
-            fileResource = new FileUrlResource(userSession.getTemporalFilePath());
-            insertSentence = dbFileCreateService.callMakeInsertSentence(fileResource.getInputStream(),dBColumnsForm);
+
+        try {
+            Resource  fileResource = new FileUrlResource(userSession.getTemporalFilePath());
+            String insertSentence = dbFileCreateService.callMakeInsertSentence(fileResource.getInputStream(), dBColumnsForm);
 
             model.addAttribute("insertSentence", insertSentence);
             model.addAttribute("dBColumnsForm", dBColumnsForm);
@@ -126,12 +164,12 @@ public class DbFileCreateController {
     public String endCreate(SessionStatus sessionStatus,
                             @ModelAttribute("userSession") UserSession userSession,
                             RedirectAttributes redirectAttributes,
-                            UriComponentsBuilder uriComponentsBuilder){
+                            UriComponentsBuilder uriComponentsBuilder) {
 
-        if(userSession != null){
+        if (userSession != null) {
             // セッション切れになっていない
             File temporalFile = new File(userSession.getTemporalFilePath());
-            if(temporalFile.exists()){
+            if (temporalFile.exists()) {
                 temporalFile.delete();
             }
         }
@@ -146,11 +184,17 @@ public class DbFileCreateController {
      * Excelファイルから読みだされたHeader情報(headerMap)より
      * DBColumnオブジェクトをそれぞれ生成し {@link DBColumn}
      * {@link DBColumnsForm} の　{@link DBColumnsForm#getColumns()} に値を格納する処理
+     *
      * @param form
      * @param headerMap
      */
-    private void createDBColumnsForm(DBColumnsForm form, Map<Integer, String> headerMap){
+    private void createDBColumnsForm(DBColumnsForm form, Map<Integer, String> headerMap) {
         headerMap.entrySet().stream().map(entry -> DBColumn.of(entry.getValue(), entry.getKey())).forEach(form::addColumns);
     }
+
+//    @GetMapping("happen")
+//    public String happen(){
+//        throw new IllegalArgumentException("error occur");
+//    }
 
 }
