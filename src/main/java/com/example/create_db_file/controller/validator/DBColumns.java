@@ -27,7 +27,7 @@ import com.example.create_db_file.controller.validator.DBColumns.List;
 @Repeatable(List.class)
 public @interface DBColumns {
 
-    String message() default "出力するカラムを1つ以上選択してください。";
+    String message() default "※出力するカラムを1つ以上選択してください。";
 
     Class<?>[] groups() default {};
 
