@@ -1,0 +1,10 @@
+.img-move {
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: all 0.8s;
+
+    &.in-view{
+        transform: none;
+        opacity: 1;
+    }
+}

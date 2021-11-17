@@ -28,10 +28,12 @@ public class ExcelInformationReader {
     public Map<Integer, String> analyzeHeader(InputStream in){
         Map<Integer, String> headerMap = new LinkedHashMap<>();
         try(Workbook workbook = WorkbookFactory.create(in)){
+
             Sheet sheet = workbook.getSheetAt(0);
             int firstRow = sheet.getFirstRowNum();
             Row row = sheet.getRow(firstRow);
             Row dataRow = sheet.getRow(firstRow + 1);
+
             if(row == null || dataRow == null){
                 // ヘッダー部分データ部分のデータの書き込みが無い場合
                 return headerMap;
@@ -87,8 +89,9 @@ public class ExcelInformationReader {
             String leftTemplate = makeInsertTemplateLeft(form);
             int firstColumn =  row.getFirstCellNum();
             StringBuilder sb = new StringBuilder();
-            List<Integer> needColumnIndex = form.getColumns().stream().map(DBColumn::getColumnIndex).collect(Collectors.toList());
+            List<Integer> needColumnIndex = form.getColumns().stream().filter(DBColumn::isInclude).map(DBColumn::getColumnIndex).collect(Collectors.toList());
             List<DBColumn> dbColumns = form.getColumns();
+
             for(int rowIndex = firstRow; rowIndex <= lastRow; rowIndex++){
                 Row moveRow = sheet.getRow(rowIndex);
                 sb.append(leftTemplate);
@@ -126,7 +129,7 @@ public class ExcelInformationReader {
     private String makeInsertTemplateLeft(DBColumnsForm form){
         String columnName = form.getColumns().stream().filter(DBColumn::isInclude)
                 .map(col -> StringUtils.hasText(col.getChangeColumnName()) ? col.getChangeColumnName() : col.getColumnName())
-                .collect(Collectors.joining(","));
+                .collect(Collectors.joining(", "));
         return "INSERT INTO " + form.getTableName() + " (" + columnName + ") VALUES(";
 
     }

@@ -1,0 +1,58 @@
+body{
+    font-family: $font-family;
+}
+
+.font-sm{
+    font-size: 12px;
+}
+
+.font-md{
+    font-size: 15px;
+}
+
+.font-title{
+    font-size: 19px;
+}
+
+.font-desc{
+    font-size: 14px;
+}
+
+.font-lg{
+    font-size: 20px;
+}
+
+.mr-md{
+    margin-right: 10px;
+}
+
+.mlr-sm{
+    margin: 0 5px;
+}
+
+.mlr-md{
+    margin: 0 8px;
+}
+
+.mlr-lg{
+    margin: 0 12px;
+}
+
+.mb-sm{
+    margin-bottom: 5px;
+}
+
+.mb-md{
+    margin-bottom: 7px;
+}
+
+.content-width{
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.hr{
+    @extend .mb-sm;
+    border: 1px solid rgba(94, 127, 179, 0.5);
+}

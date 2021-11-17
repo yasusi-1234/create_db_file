@@ -1,0 +1,43 @@
+.error-title{
+    font-size: 38px;
+    margin: 10px 0;
+}
+
+.error-string{
+    font-size: 20px;
+}
+
+.content-width{
+    max-width: 350px;
+    width: 90%;
+    margin: 20px auto;
+}
+
+.error-content{
+
+    &__title{
+        @extend .error-title;
+        font-weight: 600;
+        text-align: center;
+        color: #5e585c;
+    }
+
+    &__time, &__message{
+        @extend .error-string;
+        @extend .content-width;
+    }
+
+    &__time{
+        font-weight: 600;
+        color: #7878b1;
+    }
+
+    & .btn-area{
+        @extend .content-width;
+        & > a{
+            display: block;
+            margin: 20px 0;
+        }
+    }
+
+}

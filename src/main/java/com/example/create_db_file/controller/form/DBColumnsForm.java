@@ -17,11 +17,11 @@ import java.util.List;
 public class DBColumnsForm {
 
     /** ダウンロードする際のファイル名 */
-    @Pattern(regexp = "[\\w\\_\\-\\(\\)ぁ-んァ-ヶｱ-ﾝﾞﾟ一-龠]*", message = "使用できない文字が含まれています")
+    @Pattern(regexp = "[\\w\\_\\-\\(\\)ぁ-んァ-ヶｱ-ﾝﾞﾟ一-龠]*", message = "※使用できない文字が含まれています")
     private String fileName;
 
     /** insert文に指定するテーブル名 必須 */
-    @NotBlank(message = "テーブル名を入力してください")
+    @NotBlank(message = "※テーブル名を入力してください")
     private String tableName;
 
     /** columnのList {@link DBColumn} */

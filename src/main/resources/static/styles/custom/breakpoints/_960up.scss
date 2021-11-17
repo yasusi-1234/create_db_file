@@ -1,0 +1,47 @@
+.font-md{
+    font-size: 20px;
+}
+
+.font-title{
+    font-size: 35px;
+}
+
+.font-desc{
+    font-size: 20px;
+}
+
+.main{
+
+    &__top{
+        & .title{
+            text-align: left;
+        }
+        &__title{
+            margin-top: 10px;
+            border-bottom: 4px solid rgba(189, 83, 83, 0.6);
+            border-top: 4px solid rgba(189, 83, 83, 0.6);
+        }
+
+        &__description{
+            display: inline-block;
+        }
+    }
+}
+
+.form-area{
+    & .form{
+        &__title, &__upload{
+            margin-bottom: 20px;
+        }
+
+        &__error{
+            font-size: 16px;
+        }
+
+        & .btn-fill{
+            height: 50px;
+            width: 140px;
+        }
+
+    }
+}

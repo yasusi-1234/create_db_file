@@ -1,0 +1,118 @@
+.error-title, .error-content__title {
+  font-size: 38px;
+  margin: 10px 0;
+}
+
+.error-string, .error-content__time, .error-content__message {
+  font-size: 20px;
+}
+
+.content-width, .error-content__time, .error-content__message, .error-content .btn-area {
+  max-width: 350px;
+  width: 90%;
+  margin: 20px auto;
+}
+
+.error-content__title {
+  font-weight: 600;
+  text-align: center;
+  color: #5e585c;
+}
+
+.error-content__time {
+  font-weight: 600;
+  color: #7878b1;
+}
+
+.error-content .btn-area > a {
+  display: block;
+  margin: 20px 0;
+}
+
+.btn-fill {
+  height: 40px;
+  width: 100px;
+  background-color: white;
+  border: 2px solid black;
+  color: black;
+  font-weight: 600;
+  -webkit-box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.5);
+          box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.5);
+  -webkit-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
+
+.btn-fill:hover {
+  background-color: black;
+  color: white;
+}
+
+@media (min-width: 480px) {
+  .error-title, .error-content__title {
+    font-size: 42px;
+    margin: 30px 0;
+  }
+  .error-string, .error-content__time, .error-content__message {
+    font-size: 20px;
+  }
+  .content-width, .error-content__time, .error-content__message, .error-content .btn-area {
+    max-width: 440px;
+    width: 90%;
+    margin: 20px auto;
+  }
+  .error-content .btn-area > a {
+    margin: 25px 0;
+  }
+}
+
+@media (min-width: 600px) {
+  .error-title, .error-content__title {
+    font-size: 55px;
+    margin: 40px 0;
+  }
+  .error-string, .error-content__time, .error-content__message {
+    font-size: 20px;
+  }
+  .content-width, .error-content__time, .error-content__message, .error-content .btn-area {
+    max-width: 660px;
+    width: 90%;
+    margin: 30px auto;
+  }
+  .error-content__time {
+    font-size: 25px;
+  }
+  .error-content .btn-area {
+    margin-top: 10px;
+  }
+  .error-content .btn-area > a {
+    margin: 0;
+    display: inline-block;
+  }
+  .error-content .btn-area > a:first-child {
+    margin-right: 20px;
+  }
+  .error-content .btn-area .btn-fill {
+    width: 120px;
+    height: 50px;
+    font-size: 20px;
+  }
+}
+
+@media (min-width: 960px) {
+  .error-title, .error-content__title {
+    font-size: 60px;
+    margin: 40px 0;
+  }
+  .error-string, .error-content__time, .error-content__message {
+    font-size: 20px;
+  }
+  .content-width, .error-content__time, .error-content__message, .error-content .btn-area {
+    max-width: 1200px;
+    width: 90%;
+    margin: 30px auto;
+  }
+  .error-content__time {
+    font-size: 30px;
+  }
+}
+/*# sourceMappingURL=error.css.map */

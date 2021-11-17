@@ -1,0 +1,62 @@
+.mb-sm{
+    margin-bottom: 18px;
+}
+
+.font-title{
+    font-size: 28px;
+}
+
+.font-desc{
+    font-size: 18px;
+}
+
+.main{
+
+    &__top{
+        margin: 10px 20px;
+        & .title{
+            margin-bottom: 10px;
+            display: block;
+            text-align: left;
+        }
+        &__title{
+            display: block;
+            margin-top: 12px;
+            border-bottom: 3px solid rgba(189, 83, 83, 0.6);
+            border-top: 3px solid rgba(189, 83, 83, 0.6);
+        }
+
+        & .description{
+            margin: 0;
+            margin-left: 10px;
+            width: 95%;
+        }
+
+        &__description{
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+    }
+}
+
+.form-area{
+    & .form{
+        text-align: left;
+        margin-left: 10px;
+        &__title, &__upload{
+            margin-bottom: 18px;
+        }
+
+        &__error{
+            font-size: 14px;
+            margin: 0;
+            max-width: fit-content;
+            margin-bottom: 15px;
+        }
+
+        & .file-label{
+            display: inline-block;
+        }
+
+    }
+}

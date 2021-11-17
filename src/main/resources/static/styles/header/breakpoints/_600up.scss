@@ -1,0 +1,27 @@
+.mb-sm{
+    margin-bottom: 18px;
+}
+
+.header{
+    &__inner{
+
+        & .logo{
+            height: 60px;
+            width: 180px;
+        }
+
+        & .top-menu{
+            display: block;
+            & > ul{
+                
+                & > li{
+                    margin-right: 25px;
+                }
+            }
+        }
+
+        & .nav-area{
+            display: none;
+        }
+    }
+}
