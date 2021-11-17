@@ -1,27 +1,317 @@
 <!doctype html>
 <html lang="ja" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>DB Create Home</title>
-</head>
-<body>
-    <h1>DB Create Home</h1>
-    <p>hello make db insert sentence</p>
 
-    <p th:text="${message}"></p>
-    <hr>
-    <form action="" th:action="@{/upload}" method="post" enctype="multipart/form-data"
-          th:object="${originalDataFileForm}">
-        <label for="uploadFile">file</label>
-        <input type="file" id="uploadFile" th:field="*{multipartFile}">
-        <br>
-        <div th:if="${#fields.hasErrors('multipartFile')}"
-             th:errors="*{multipartFile}" style="color: red;"></div>
-        <div th:text="${noHeader}" style="color: red;"></div>
-        <input type="submit" value="送信">
-    </form>
+    <link rel="shortcut icon" href="../static/images/Insert Maker.png" th:href="@{/images/Insert Maker.png}"
+        type="image/x-icon">
+
+    <link rel="stylesheet" href="../static/styles/vender/bootstrap-reboot.css"
+        th:href="@{/styles/vender/bootstrap-reboot.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&family=Roboto:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="../static/styles/header/header.css" th:href="@{/styles/header/header.css}">
+    <link rel="stylesheet" href="../static/styles/home/home.css" th:href="@{/styles/home/home.css}">
+
+    <title>Home</title>
+</head>
+
+<body>
+    <div class="global-container">
+        <div class="container">
+
+            <header class="header">
+                <div class="header__inner">
+                    <div class="logo">
+                        <img src="../static/images/logo.png" th:src="@{/images/logo.png}" class="logo__img">
+                    </div>
+                    <div class="top-menu">
+                        <ul>
+                            <li><a tabindex="-1" class="use-info-link">使い方</a></li>
+                            <li><a tabindex="-1" class="help-link">ヘルプ</a></li>
+                            <li><a href="#" th:href="@{/home}">ホーム</a></li>
+                        </ul>
+                    </div>
+                    <div class="nav-area">
+                        <div class="nav-menu">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                        <!-- <div class="nav-open">
+                            <ul>
+                                <li><a href="#" class="help-link">ヘルプ</a></li>
+                                <li><a href="#">ホーム</a></li>
+                            </ul>
+                        </div> -->
+                    </div>
+                </div>
+            </header>
+
+            <div class="content">
+                <div class="main-content">
+                    <main class="main">
+                        <section class="main__top">
+                            <div class="title">
+                                <h1 class="main__top__title">データベースのInsert文を作成しよう</h1>
+                            </div>
+                            <div class="description">
+                                <p class="main__top__description">このサイトはDBのInsert文を作成するサイトです。</p>
+                                <p class="main__top__description">Excelファイルからデータを読み込み、カスタマイズして.sql形式のファイルとしてダウンロードできます。
+                                </p>
+                                <p class="main__top__description">↓からご利用できます。お気軽にお使いください。</p>
+                            </div>
+                        </section>
+
+                        <div class="hr"></div>
+
+                        <section class="main__form">
+                            <div class="form-area">
+                                <div class="form-heading">
+                                    <h2 class="heading">任意のファイルを添付しよう</h2>
+                                </div>
+                                <p th:text="${message}" class="thanks">ご利用ありがとうございました!!</p>
+                                <form class="form" action="#" th:action="@{/upload}" method="post"
+                                    enctype="multipart/form-data" th:object="${originalDataFileForm}">
+                                    <div class="form__title">↓こちらにファイルを添付してください</div>
+
+                                    <div class="form__error" th:if="${#fields.hasErrors('multipartFile')}"
+                                        th:errors="*{multipartFile}">※ファイル形式が不正かあるいは選択されていません。xlsx・xls形式のファイルのみ選択できます。
+                                    </div>
+                                    <div class="form__error" th:text="${noHeader}">
+                                        ※ヘッダーの値が読み取れないか、あるいはデータが情報が不足しています。ファイルを確認してください。</div>
+
+                                    <label for="uploadFile" class="file-label">添付ファイル：</label>
+                                    <input class="form__upload" type="file" id="uploadFile" th:field="*{multipartFile}">
+                                    <br>
+
+                                    <div class="form__submit">
+                                        <input class="form__btn btn-fill" type="submit" value="送信">
+                                    </div>
+                                </form>
+                            </div>
+                        </section>
+
+                        <div class="hr"></div>
+
+                        <section class="use-info">
+                            <div class="use-info-container">
+                                <div class="info-heading">
+                                    <h2 class="heading">サンプルデータをダウンロード</h2>
+                                </div>
+
+                                <div class="sample">
+                                    サンプルデータダウンロード↓
+                                </div>
+                                <div class="sample">
+                                    <a href="#" th:href="@{/getSample}">employee.xlsx</a>
+                                </div>
+                            </div>
+                        </section>
+
+                        <div class="hr"></div>
+
+                        <section class="use-info">
+                            <div class="use-info-container">
+                                <div class="info-heading use-info-heading">
+                                    <h2 class="heading">作成方法や使い方を見てみよう</h2>
+                                </div>
+
+                                <div class="info-item">
+                                    <h3 class="info-item-title first">初めにファイルを選択して送信します</h3>
+                                    <div class="item-content">
+                                        <div class="item-content-img img-move">
+                                            <div class="img-cover">
+                                                <img src="../static/images/info1.png" th:src="@{/images/info1.png}"
+                                                    class="img-back">
+                                            </div>
+                                        </div>
+                                        <div class="item-content-p">
+                                            <p>まず上の場所から添付ファイルを選択して送信します</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="arrow">
+                                    <div class="arrow-inner">
+                                        <img src="../static/images/arrow.png" th:src="@{/images/arrow.png}">
+                                    </div>
+                                </div>
+
+                                <div class="info-item">
+                                    <h3 class="info-item-title first">以下の画像のデータを取り込んだ場合</h3>
+                                    <div class="item-content">
+                                        <div class="item-content-img img-move">
+                                            <div class="img-cover">
+                                                <img src="../static/images/info2.png" th:src="@{/images/info2.png}"
+                                                    class="img-back">
+                                            </div>
+                                        </div>
+                                        <div class="item-content-p">
+                                            <p>この例を用いて説明します</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="arrow">
+                                    <div class="arrow-inner">
+                                        <img src="../static/images/arrow.png" th:src="@{/images/arrow.png}">
+                                    </div>
+                                </div>
+
+                                <div class="info-item">
+                                    <h3 class="info-item-title first">ファイル名・テーブル名を設定しよう</h3>
+                                    <div class="item-content">
+                                        <div class="item-content-img img-move">
+                                            <div class="img-cover">
+                                                <img src="../static/images/info3.png" th:src="@{/images/info3.png}"
+                                                    class="img-back">
+                                            </div>
+                                        </div>
+                                        <div class="item-content-p">
+                                            <p>
+                                                ファイル名は省略可能です。<br>
+                                                テーブル名は必須項目になります。ここで設定した値がInsert分のテーブル名になります。
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="arrow">
+                                    <div class="arrow-inner">
+                                        <img src="../static/images/arrow.png" th:src="@{/images/arrow.png}">
+                                    </div>
+                                </div>
+
+                                <div class="info-item">
+                                    <h3 class="info-item-title first">カラムのデータなどを設定しよう</h3>
+                                    <div class="item-content">
+                                        <div class="item-content-img img-move">
+                                            <div class="img-cover">
+                                                <img src="../static/images/info4.png" th:src="@{/images/info4.png}"
+                                                    class="img-back">
+                                            </div>
+                                        </div>
+                                        <div class="item-content-p">
+                                            <p class="p-btm">
+                                                カラム名は省略可能です。省略した場合はindexに出力されている名前が設定されます。
+                                            </p>
+                                            <p class="p-btm">
+                                                この列が必要ない場合は除外を選択することで、Insert文から除外できます。
+                                            </p>
+                                            <p class="p-btm">
+                                                データの値を設定します。String値の場合はInsert分のValueの部分の値に''で囲まれた値が出力されます。
+                                            </p>
+                                            <p class="p-btm">
+                                                Number及びDecimalの場合は''無しの数値のデータとして格納されます。
+                                            </p>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="arrow">
+                                    <div class="arrow-inner">
+                                        <img src="../static/images/arrow.png" th:src="@{/images/arrow.png}">
+                                    </div>
+                                </div>
+
+                                <div class="info-item">
+                                    <h3 class="info-item-title first">カスタマイズしたInsert文を出力しよう</h3>
+                                    <div class="item-content">
+                                        <div class="img-double">
+                                            <div class="item-content-img img-move">
+                                                <div class="img-cover">
+                                                    <img src="../static/images/info5.png" th:src="@{/images/info5.png}"
+                                                        class="img-back">
+                                                </div>
+                                            </div>
+                                            <div class="item-content-img img-move">
+                                                <div class="img-cover">
+                                                    <img src="../static/images/info6.png" th:src="@{/images/info6.png}"
+                                                        class="img-back">
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="item-content-p">
+                                            <p class="p-btm">
+                                                カスタム項目を設定の上、作成ボタンを押すとダウンロードできます。
+                                            </p>
+                                            <p class="p-btm">
+                                                上記はカラム名のidをemployee_idに変更し、first_name及びdepartmentを除外し、idとageにNumberを設定して
+                                                出力した例です。
+                                            </p>
+                                            <p class="p-btm">
+                                                除外した列は含まれておらず、また設定した値で出力されている事が解ります。
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </section>
+
+                    </main>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="up-view">
+            <div class="up-view__container">
+                <img src="../static/images/up-arrow.png" th:src="@{/images/up-arrow.png}" class="up-view__img">
+            </div>
+        </div>
+
+        <div class="background">
+            <div class="background-menu">
+                <div class="close">
+                    <span></span>
+                    <span></span>
+                </div>
+                <ul>
+                    <li><a href="#" th:href="@{/home}">ホーム</a></li>
+                    <li><a tabindex="-1" class="help-link">ヘルプ</a></li>
+                    <li><a tabindex="-1" class="use-info-link">使い方</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="wait-screen">
+            <div class="wait-screen__container">
+                <div class="wait-str">
+                    読み込み中
+                </div>
+                <div class="wait-str">
+                    しばらくお待ちください...
+                </div>
+                <div class="wait-anime">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <script src="../static/scripts/main.js" th:src="@{/scripts/main.js}"></script>
+    <script src="../static/scripts/libs/observe-img.js" th:src="@{/scripts/libs/observe-img.js}"></script>
+
+    <th:block th:if="${useInfo}">
+        <script src="../static/scripts/libs/move-use-info.js" th:src="@{/scripts/libs/move-use-info.js}"></script>
+    </th:block>
 </body>
+
 </html>
