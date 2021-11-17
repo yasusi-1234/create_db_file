@@ -45,12 +45,10 @@ public class DbFileCreateServiceImpl implements DbFileCreateService{
     public String fileToSaveTemporarily(InputStream in, String fileName){
         try {
             File tempFile = resourceLoader.getResource("classpath:temporal").getFile();
-            String originalFileName = fileName;
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSS");
             String formatDate = LocalDateTime.now().format(formatter);
-            String temporalFileName = formatDate + "_" + originalFileName;
+            String temporalFileName = formatDate + "_" + fileName;
             Path path = Paths.get(tempFile.getAbsolutePath(), temporalFileName);
-            System.out.println(path);
             // 一時ファイル保存
             excelReader.saveExcelFile(in, path.toString());
             return path.toString();
