@@ -1,0 +1,7 @@
+logging:
+  file: logs/insertMaker.log
+  config: classpath:logback-spring.xml
+  level:
+    root: info
+    org.springframework.web: info
+
