@@ -33,7 +33,6 @@
                     </div>
                     <div class="top-menu">
                         <ul>
-                            <li th:if="${userSession.temporalFilePath}"><a href="#" th:href="@{/upload}">カスタム</a></li>
                             <li><a href="#" th:href="@{/home?useInfo=true}">使い方</a></li>
                             <li><a tabindex="-1" class="help-link">ヘルプ</a></li>
                             <li><a href="#" th:href="@{/home}">ホーム</a></li>
@@ -91,7 +90,6 @@
                     <li><a href="#" th:href="@{/home}">ホーム</a></li>
                     <li><a tabindex="-1" class="help-link">ヘルプ</a></li>
                     <li><a href="#" th:href="@{/home?useInfo=true}">使い方</a></li>
-                    <li th:if="${userSession.temporalFilePath}"><a href="#" th:href="@{/upload}">カスタム</a></li>
                 </ul>
             </div>
         </div>
