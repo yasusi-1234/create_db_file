@@ -33,6 +33,7 @@
                     </div>
                     <div class="top-menu">
                         <ul>
+                            <li th:if="${userSession.temporalFilePath}"><a href="#" th:href="@{/upload}">カスタム</a></li>
                             <li><a href="#" th:href="@{/home?useInfo=true}">使い方</a></li>
                             <li><a tabindex="-1" class="help-link">ヘルプ</a></li>
                             <li><a href="#" th:href="@{/home}">ホーム</a></li>
@@ -67,14 +68,6 @@
                             </div>
 
                         </div>
-                        <!-- <div th:text="'timestamp: ' + ${timestamp}"></div>
-                        <div th:text="'status: ' + ${status}"></div>
-                        <div th:text="'error: ' + ${error}"></div>
-                        <div th:text="'exception: ' + ${exception}"></div> -->
-                        <!-- <div th:text="'message: ' + ${message}"></div> -->
-                        <!-- <div th:text="'errors: ' + ${errors}"></div> -->
-                        <!-- <div th:text="'trace: ' + ${trace}"></div> -->
-                        <!-- <div th:text="'path: ' + ${path}"></div> -->
 
                     </main>
                 </div>
@@ -98,6 +91,7 @@
                     <li><a href="#" th:href="@{/home}">ホーム</a></li>
                     <li><a tabindex="-1" class="help-link">ヘルプ</a></li>
                     <li><a href="#" th:href="@{/home?useInfo=true}">使い方</a></li>
+                    <li th:if="${userSession.temporalFilePath}"><a href="#" th:href="@{/upload}">カスタム</a></li>
                 </ul>
             </div>
         </div>
