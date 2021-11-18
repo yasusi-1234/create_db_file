@@ -147,6 +147,7 @@ public class DbFileCreateController {
         }
 
         try {
+            // +++++++++++++++++++
             Resource  fileResource = new FileUrlResource(userSession.getTemporalFilePath());
             String insertSentence = dbFileCreateService.callMakeInsertSentence(fileResource.getInputStream(), dBColumnsForm);
 
