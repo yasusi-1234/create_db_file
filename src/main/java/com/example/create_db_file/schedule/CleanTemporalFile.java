@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.util.StringUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
@@ -32,11 +33,15 @@ public class CleanTemporalFile {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
         String formatNowDate = LocalDateTime.now().format(formatter);
 
+        File file = new File("/tmp");
+
         try {
 
-            long fileCount = Files.walk(resource.getFile().toPath()).count();
+//            long fileCount = Files.walk(resource.getFile().toPath()).count();
+            long fileCount = Files.walk(file.toPath()).count();
             log.info("現在の格納ファイル数: {}", fileCount);
-            Files.walk(resource.getFile().toPath()).filter(path -> !Files.isDirectory(path))
+            Files.walk(file.toPath()).filter(path -> !Files.isDirectory(path))
+//            Files.walk(resource.getFile().toPath()).filter(path -> !Files.isDirectory(path))
                     .forEach(path -> {
 
                         if(path.getFileName().toString().length() > 12 && path.getFileName().toString().substring(0, 12).matches("[0-9]*")){
