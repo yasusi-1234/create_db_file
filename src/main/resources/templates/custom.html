@@ -18,7 +18,7 @@
         rel="stylesheet">
 
     <link rel="stylesheet" href="../static/styles/header/header.css" th:href="@{/styles/header/header.css}">
-    <!-- <link rel="stylesheet" href="../static/styles/custom/custom.css"> -->
+    
     <link rel="stylesheet" href="../static/styles/home/home.css" th:href="@{/styles/home/home.css}">
 
     <title>Insert Maker Custom</title>
@@ -35,6 +35,7 @@
                     </div>
                     <div class="top-menu">
                         <ul>
+                            <li th:if="${userSession.temporalFilePath}"><a href="#" th:href="@{/upload}">カスタム</a></li>
                             <li><a href="#" th:href="@{/home?useInfo=true}">使い方</a></li>
                             <li><a tabindex="-1" class="help-link">ヘルプ</a></li>
                             <li><a href="#" th:href="@{/home}">ホーム</a></li>
@@ -137,14 +138,6 @@
                                                         th:field="*{columns[__${stat.index}__].type}">
                                                     <!-- STRING -->
                                                 </div>
-                                                <!-- <div class="radio">
-                                                    <input th:each="ct: ${columnType}" type="radio" th:name="${ct}" th:text="${ct.name()}" th:value="${ct.name()}" th:field="*{columns[__${stat.index}__].type}">
-                                                    NUMBER
-                                                </div>
-                                                <div class="radio">
-                                                    <input th:each="ct: ${columnType}" type="radio" th:name="${ct}" th:text="${ct.name()}" th:value="${ct.name()}" th:field="*{columns[__${stat.index}__].type}">
-                                                    DECIMAL
-                                                </div> -->
                                             </div>
                                         </div>
                                     </div>
@@ -183,15 +176,11 @@
                     <li><a href="#" th:href="@{/home}">ホーム</a></li>
                     <li><a tabindex="-1" class="help-link">ヘルプ</a></li>
                     <li><a href="#" th:href="@{/home?useInfo=true}">使い方</a></li>
+                    <li th:if="${userSession.temporalFilePath}"><a href="#" th:href="@{/upload}">カスタム</a></li>
                 </ul>
             </div>
         </div>
     </div>
-    <!--    <div th:object="${dBColumnsForm}">-->
-    <!--        <ul th:each="col : *{columns}">-->
-    <!--            <li th:text="|${col.columnIndex} , ${col.columnName}|"></li>-->
-    <!--        </ul>-->
-    <!--    </div>-->
 
     <script src="../static/scripts/main.js" th:src="@{/scripts/main.js}"></script>
 </body>
