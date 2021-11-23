@@ -40,6 +40,9 @@ dependencies {
 	// aop
 	implementation 'org.springframework:spring-aop'
 	implementation 'org.aspectj:aspectjweaver'
+	// postgres
+	runtimeOnly 'org.postgresql:postgresql'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
