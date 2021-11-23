@@ -4,4 +4,25 @@ logging:
   level:
     root: info
     org.springframework.web: info
+    org:
+      hibernate:
+        SQL: debug
+        type:
+          descriptor:
+            sql:
+              BasicBinder: debug
+
+
+spring:
+  jpa:
+    database: POSTGRESQL
+    properties:
+      hibernate:
+      format_sql: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/sample2
+    username: sample
+    password: password
+
+
 
