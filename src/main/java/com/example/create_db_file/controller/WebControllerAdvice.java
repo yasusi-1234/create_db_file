@@ -14,6 +14,7 @@ public class WebControllerAdvice {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public String exceptionHandler(Exception e, Model model){
+        e.printStackTrace();
         log.warn("error handling. catch exceptionHandler: {}", e.getClass());
         model.addAttribute("status",HttpStatus.INTERNAL_SERVER_ERROR.value());
         model.addAttribute("error", HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());

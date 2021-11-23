@@ -1,7 +1,6 @@
-package com.example.create_db_file.service;
+package com.example.create_db_file.domain.service;
 
 import com.example.create_db_file.controller.form.DBColumnsForm;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
 import java.util.Map;

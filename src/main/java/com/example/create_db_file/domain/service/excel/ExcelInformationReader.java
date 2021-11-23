@@ -1,4 +1,4 @@
-package com.example.create_db_file.service.excel;
+package com.example.create_db_file.domain.service.excel;
 
 import com.example.create_db_file.controller.form.DBColumn;
 import com.example.create_db_file.controller.form.DBColumnsForm;

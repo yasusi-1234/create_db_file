@@ -1,4 +1,4 @@
-package com.example.create_db_file.service.aspect;
+package com.example.create_db_file.domain.service.aspect;
 
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;

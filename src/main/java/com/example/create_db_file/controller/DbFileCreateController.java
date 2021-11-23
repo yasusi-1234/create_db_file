@@ -4,7 +4,7 @@ import com.example.create_db_file.controller.form.DBColumn;
 import com.example.create_db_file.controller.form.DBColumnsForm;
 import com.example.create_db_file.controller.form.OriginalDataFileForm;
 import com.example.create_db_file.controller.session.UserSession;
-import com.example.create_db_file.service.DbFileCreateService;
+import com.example.create_db_file.domain.service.DbFileCreateService;
 import com.example.create_db_file.utils.CommonUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

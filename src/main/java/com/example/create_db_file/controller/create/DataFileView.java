@@ -1,5 +1,6 @@
 package com.example.create_db_file.controller.create;
 
+import com.example.create_db_file.controller.form.CreateFromZeroForm;
 import com.example.create_db_file.controller.form.DBColumnsForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -28,7 +29,7 @@ public class DataFileView extends AbstractView {
     private final ResourceLoader resourceLoader;
 
     /**
-     * {@link com.example.create_db_file.service.DbFileCreateServiceImpl#callMakeInsertSentence(InputStream, DBColumnsForm)}
+     * {@link com.example.create_db_file.domain.service.DbFileCreateServiceImpl#callMakeInsertSentence(InputStream, DBColumnsForm)}
      * より作成されたInsert文を{@link  DBColumnsForm#getFileName()}で指定されたfile名 + .sql形式のファイルとして
      * もし指定が無ければsample.sqlとして作成しダウンロードする
      * @param model コントローラークラス {@link com.example.create_db_file.controller.DbFileCreateController} から渡されたModelオブジェクト
@@ -49,8 +50,14 @@ public class DataFileView extends AbstractView {
 
     private void renderInsertFile(Map<String, Object> model, String insertSentence, HttpServletResponse response) throws IOException{
         DBColumnsForm form = (DBColumnsForm) model.get("dBColumnsForm");
+        String fileName = null;
 
-        String fileName = StringUtils.hasText(form.getFileName()) ? form.getFileName() + ".sql" : "sample.sql";
+        if (form == null){
+            CreateFromZeroForm createFromZeroForm = (CreateFromZeroForm) model.get("createFromZeroForm");
+            fileName = StringUtils.hasText(createFromZeroForm.getFileName()) ? createFromZeroForm.getFileName() + ".sql" : "sample.sql";
+        }else {
+            fileName = StringUtils.hasText(form.getFileName()) ? form.getFileName() + ".sql" : "sample.sql";
+        }
 
         response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
         response.setHeader("Content-Type", "text/plain");
