@@ -1,13 +1,12 @@
-package com.example.create_db_file.service;
+package com.example.create_db_file.domain.service;
 
 import com.example.create_db_file.controller.form.DBColumnsForm;
-import com.example.create_db_file.service.excel.ExcelInformationReader;
+import com.example.create_db_file.domain.service.excel.ExcelInformationReader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
