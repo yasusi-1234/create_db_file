@@ -7,6 +7,8 @@
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
+    <meta name="description" content="このサービスはExcelファイルのデータから、データベス(DB)のSQLのInsert文を生成・作成するサービスです" />
+
     <link rel="shortcut icon" href="../static/images/Insert Maker.png" th:href="@{/images/Insert Maker.png}"
         type="image/x-icon">
 
@@ -32,6 +34,7 @@
                     </div>
                     <div class="top-menu">
                         <ul>
+                            <li><a href="#" th:href="@{/from_zero/form}">0から作成</a></li>
                             <li th:if="${userSession.temporalFilePath}"><a href="#" th:href="@{/upload}">カスタム</a></li>
                             <li><a tabindex="-1" class="use-info-link">使い方</a></li>
                             <li><a tabindex="-1" class="help-link">ヘルプ</a></li>
@@ -105,6 +108,23 @@
                                 </div>
                                 <div class="sample">
                                     <a href="#" th:href="@{/getSample}">employee.xlsx</a>
+                                </div>
+                            </div>
+                        </section>
+
+                        <div class="hr"></div>
+
+                        <section class="use-info">
+                            <div class="use-info-container">
+                                <div class="info-heading">
+                                    <h2 class="heading">0からInsert文を作成したい</h2>
+                                </div>
+
+                                <div class="sample">
+                                    Excelファイルが無くても、こちらのページから作成出来ます↓
+                                </div>
+                                <div class="sample">
+                                    <a href="#" th:href="@{/from_zero/form}">0からInsert文を作成するページ</a>
                                 </div>
                             </div>
                         </section>
@@ -275,6 +295,7 @@
                     <li><a tabindex="-1" class="help-link">ヘルプ</a></li>
                     <li><a tabindex="-1" class="use-info-link">使い方</a></li>
                     <li th:if="${userSession.temporalFilePath}"><a href="#" th:href="@{/upload}">カスタム</a></li>
+                    <li><a href="#" th:href="@{/from_zero/form}">0から作成</a></li>
                 </ul>
             </div>
         </div>

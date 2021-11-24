@@ -6,6 +6,13 @@
     margin-bottom: 15px;
 }
 
+.h4-deco{
+    font-size: 14px;
+    border-bottom: 2px solid #db8e8e;
+    border-left: 3px solid #db8e8e;
+    background-color: #f9f4f4;
+}
+
 .content-width {
     width: 90%;
     max-width: 1200px;
@@ -216,4 +223,8 @@
     &>input {
         margin-right: 20px;
     }
+}
+
+.h4{
+    @extend .h4-deco;
 }

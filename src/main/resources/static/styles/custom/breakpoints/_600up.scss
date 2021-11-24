@@ -2,6 +2,15 @@
     margin-bottom: 50px;
 }
 
+.h4-deco{
+    font-size: 20px;
+    border-bottom: 4px solid #db8e8e;
+    border-left: 8px solid #db8e8e;
+    background-color: #f9f4f4;
+    padding-left: 18px;
+    margin-bottom: 16px;
+}
+
 .custom-form {
     &__num {
         width: auto;
@@ -148,4 +157,14 @@
 .btn-fill{
     width: 140px;
     height: 55px;
+}
+
+.img-double {
+    display: flex;
+
+    & .item-content-img{
+        & .img-cover{
+            height: 155px;
+        }
+    }
 }

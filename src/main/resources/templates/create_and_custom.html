@@ -7,6 +7,8 @@
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
+    <meta name="description" content="このサービスはExcelファイルのデータから、データベス(DB)のSQLのInsert文を生成・作成するサービスです" />
+
     <link rel="shortcut icon" href="../static/images/Insert Maker.png" th:href="@{/images/Insert Maker.png}"
         type="image/x-icon">
 
@@ -35,6 +37,7 @@
                     </div>
                     <div class="top-menu">
                         <ul>
+                            <li><a href="#" th:href="@{/from_zero/form}">0から作成</a></li>
                             <li th:if="${userSession.temporalFilePath}"><a href="#" th:href="@{/upload}">カスタム</a></li>
                             <li><a tabindex="-1" class="use-info-link">使い方</a></li>
                             <li><a tabindex="-1" class="help-link">ヘルプ</a></li>
@@ -522,6 +525,9 @@
                                                     class="img-back">
                                             </div>
                                         </div>
+                                        <div class="inner-title">
+                                            <h4 class="h4">数値データの場合</h4>
+                                        </div>
                                         <div class="item-content-p">
                                             <p class="p-btm">
                                                 数値データの場合は数値タイプ【間隔ランダム・ランダム・固定値・連番・全てNull】から選択できます
@@ -535,6 +541,10 @@
                                             <p class="p-btm">
                                                 固定値の場合は最小値で指定された数値で全て出力され、連番の場合は最小値で指定された値から1づつプラスされた値が出力されます
                                             </p>
+                                        </div>
+
+                                        <div class="inner-title">
+                                            <h4 class="h4">日時データの場合</h4>
                                         </div>
 
                                         <div class="item-content-p">
@@ -604,6 +614,7 @@
                 </div>
                 <ul>
                     <li><a href="#" th:href="@{/home}">ホーム</a></li>
+                    <li><a href="#" th:href="@{/from_zero/form}">0から作成</a></li>
                     <li><a tabindex="-1" class="help-link">ヘルプ</a></li>
                     <li><a tabindex="-1" class="use-info-link">使い方</a></li>
                     <li th:if="${userSession.temporalFilePath}"><a href="#" th:href="@{/upload}">カスタム</a></li>
