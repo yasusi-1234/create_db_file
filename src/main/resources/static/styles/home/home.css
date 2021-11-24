@@ -883,9 +883,6 @@ body {
     height: 50px;
     margin: 10px 0;
   }
-  .item-content {
-    text-align: center;
-  }
   .item-content-img {
     margin-bottom: 18px;
     overflow: hidden;
