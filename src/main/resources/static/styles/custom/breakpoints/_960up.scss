@@ -1,47 +1,144 @@
-.font-md{
-    font-size: 20px;
+.mb-lg {
+    margin-bottom: 50px;
 }
 
-.font-title{
-    font-size: 35px;
-}
+.custom-form {
+    &__num {
+        width: auto;
+    }
 
-.font-desc{
-    font-size: 20px;
-}
+    &__up {
 
-.main{
-
-    &__top{
-        & .title{
-            text-align: left;
+        & .custom-form__item{
+            & > label{
+                width: 200px;
+            }
         }
-        &__title{
-            margin-top: 10px;
-            border-bottom: 4px solid rgba(189, 83, 83, 0.6);
-            border-top: 4px solid rgba(189, 83, 83, 0.6);
+    }
+
+    &__down{
+        display: flex;
+        flex-wrap: wrap;
+        // justify-content: center;
+    }
+
+    /***/
+    & .form-block {
+        width: 46%;
+        max-width: 430px;
+        padding-top: 30px;
+        margin-right: 5px;
+        margin-bottom: 30px;
+    }
+
+    &__label {
+        width: 130px;
+    }
+
+    &__input {
+        width: auto;
+
+        &.date-time {
+            width: 260px;
+        }
+    }
+
+    &__tag {
+        position: absolute;
+        top: -13px;
+        left: -11px;
+        width: 250px;
+        border-radius: 20px;
+    }
+    
+    & .tag__inner {
+        margin-left: 25px;
+    }
+}
+
+
+.btn-zone {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    & .custom-form__label,
+    & .custom-form__item {
+        margin-bottom: 0px;
+    }
+
+    & .custom-form__item{
+        & .custom-form__label{
+            width: 130px;
+        }
+        & > select{
+            width: auto;
+        }
+    }
+
+    &__btn {
+        padding: 6px 12px;
+
+        &>span {
+            margin-right: 5px;
+        }
+    }
+
+}
+
+.form-background{
+    &.view{
+    
+        & .f-b-container{
+            width: 55%;
+            padding: 50px;
+            border-top-left-radius: 20%;
+            border-bottom-right-radius: 20%;
+
+            &__content{
+                padding: 10px;
+            }
+
+            &__item{
+                
+                margin-bottom: 20px;
+    
+                & > input{
+                    height: auto;
+                    width: 140px;
+                    margin-right: 15px;
+                } 
+            }
         }
 
-        &__description{
-            display: inline-block;
+        & .close-icon {
+            top: -5px;
+            left: -20px;
+            width: 45px;
+            height: 45px;
+
+            &>div {
+                height: 5px;
+            }
         }
     }
 }
 
-.form-area{
-    & .form{
-        &__title, &__upload{
-            margin-bottom: 20px;
-        }
+.add-btn-area{
+    margin-bottom: 20px;
+    display: inline-block;
+    margin-right: 20px;
+}
 
-        &__error{
-            font-size: 16px;
-        }
-
-        & .btn-fill{
-            height: 50px;
-            width: 140px;
-        }
-
+.create-btn-area{
+    margin-left: 0;
+    display: inline-block;
+    & > input{
+        margin-right: 20px;
     }
+}
+
+.btn-fill{
+    width: 150px;
+    height: 60px;
 }
