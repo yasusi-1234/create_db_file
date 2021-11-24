@@ -12,7 +12,7 @@ import java.util.List;
 public class NumberForm {
 
     @NotBlank(message = "この項目は必須です")
-    private String columnName;
+    private String columnName = "id";
 
     private long minNumber = 1;
 

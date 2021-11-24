@@ -9,11 +9,11 @@ import java.util.List;
 public class MailAddressForm {
 
     @NotBlank(message = "この項目は必須です")
-    private String columnName;
+    private String columnName = "mail_address";
 
-    private Integer accountLength;
+    private Integer accountLength = 10;
 
-    private String domainName;
+    private String domainName = "xxx.xx.xx";
 
     private List<String> mailAddresses;
 
