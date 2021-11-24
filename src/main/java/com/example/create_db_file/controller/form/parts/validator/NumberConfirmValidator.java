@@ -39,7 +39,7 @@ public class NumberConfirmValidator implements ConstraintValidator<NumberConfirm
         } else {
             context.disableDefaultConstraintViolation(); // (3) デフォルトのConstraintViolationオブジェクトの生成を無効にする。
             context.buildConstraintViolationWithTemplate(message)
-                    .addPropertyNode(field).addConstraintViolation(); // (4)
+                    .addPropertyNode("minNumber").addConstraintViolation(); // (4)
             return false;
         }
     }

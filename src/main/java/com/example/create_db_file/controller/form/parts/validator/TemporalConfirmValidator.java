@@ -68,7 +68,7 @@ public class TemporalConfirmValidator implements ConstraintValidator<TemporalCon
 
             context.disableDefaultConstraintViolation(); // (3) デフォルトのConstraintViolationオブジェクトの生成を無効にする。
             context.buildConstraintViolationWithTemplate(message)
-                    .addPropertyNode(field).addConstraintViolation(); // (4)
+                    .addPropertyNode("minTime").addConstraintViolation(); // (4)
             return false;
         }
 

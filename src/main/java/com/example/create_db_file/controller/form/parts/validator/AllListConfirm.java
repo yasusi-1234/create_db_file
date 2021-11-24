@@ -15,6 +15,8 @@ public @interface AllListConfirm {
 
     Class<? extends Payload>[] payload() default {};
 
+    String field() default "";
+
     @Target({ ElementType.TYPE, ElementType.ANNOTATION_TYPE })
     @Retention(RetentionPolicy.RUNTIME)
     @Documented

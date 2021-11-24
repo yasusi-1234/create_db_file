@@ -12,8 +12,8 @@ public class AddForm {
     private Map<String, Integer> addMap = new LinkedHashMap<>();
 
     public AddForm(){
-        addMap.put("firstName", 0);
         addMap.put("lastName", 0);
+        addMap.put("firstName", 0);
         addMap.put("mailAddress", 0);
         addMap.put("number", 0);
         addMap.put("dateTime", 0);

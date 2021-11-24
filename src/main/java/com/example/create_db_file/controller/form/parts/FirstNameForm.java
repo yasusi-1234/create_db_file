@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 public class FirstNameForm {
 
     @NotBlank(message = "この項目は必須です")
-    private String columnName;
+    private String columnName = "first_name";
     @NotNull(message = "この項目は必須です")
     private NameType nameType = NameType.Normal;
 

@@ -1,0 +1,647 @@
+<!doctype html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link rel="shortcut icon" href="../static/images/Insert Maker.png" th:href="@{/images/Insert Maker.png}"
+        type="image/x-icon">
+
+    <link rel="stylesheet" href="../static/styles/vender/bootstrap-reboot.css"
+        th:href="@{/styles/vender/bootstrap-reboot.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&family=Roboto:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="../static/styles/header/header.css" th:href="@{/styles/header/header.css}">
+    <link rel="stylesheet" href="../static/styles/home/home.css" th:href="@{/styles/home/home.css}">
+    <link rel="stylesheet" href="../static/styles/custom/custom.css" th:href="@{/styles/custom/custom.css}">
+    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+
+
+    <title>Insert Maker Home</title>
+</head>
+
+<body>
+    <div class="global-container">
+        <div class="container">
+
+            <header class="header">
+                <div class="header__inner">
+                    <div class="logo">
+                        <img src="../static/images/logo.png" th:src="@{/images/logo.png}" class="logo__img">
+                    </div>
+                    <div class="top-menu">
+                        <ul>
+                            <li th:if="${userSession.temporalFilePath}"><a href="#" th:href="@{/upload}">カスタム</a></li>
+                            <li><a tabindex="-1" class="use-info-link">使い方</a></li>
+                            <li><a tabindex="-1" class="help-link">ヘルプ</a></li>
+                            <li><a href="#" th:href="@{/home}">ホーム</a></li>
+                        </ul>
+                    </div>
+                    <div class="nav-area">
+                        <div class="nav-menu">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content">
+                <div class="main-content">
+                    <main class="main">
+<!--/*                        <a href="#" th:href="@{/from_zero/dummy/create}">ダミーデータ生成</a> */-->
+<!--/*                        <a href="#" th:href="@{/from_zero/test}">ランダム生成</a> */-->
+                        <section class="main__top">
+                            <div class="title">
+                                <h1 class="main__top__title">0からInsert文を作成しよう</h1>
+                            </div>
+                            <div class="description">
+                                <p class="main__top__description">Excelデータファイルが無くても、0から作成可能です</p>
+                                <p class="main__top__description">自分の好みのデータ構造にカスタマイズして.sql形式のファイルとしてダウンロードできます。
+                                </p>
+                                <p class="main__top__description">またオマケ機能でExcelファイルとしてもダウンロード出来ます。お気軽にお使いください。</p>
+                            </div>
+                        </section>
+
+                        <div class="hr"></div>
+
+                        <section>
+                            <div class="form-area">
+                                <div class="form-heading custom-heading">
+                                    <h2 class="heading">任意の出力ファイルを作成しよう</h2>
+                                </div>
+
+                                <form class="custom-form" action="#" th:action="@{/from_zero/form}" method="post" th:object="${createFromZeroForm}">
+                                    
+                                    <div class="custom-form__up">
+                                        <div th:if="${#fields.hasErrors('createSize')}" th:errors="*{createSize}"
+                                            class="form__error">※数値は1~1000の間で指定可能です</div>
+                                        <div class="custom-form__item">
+                                            <label for="createSize">作成する要素数： </label>
+                                            <input type="number" th:field="*{createSize}" id="createSize" class="custom-form__num">
+                                        </div>
+                                        
+                                        <div th:if="${#fields.hasErrors('tableName')}" th:errors="*{tableName}"
+                                            class="form__error">※この項目は必須です</div>
+                                        <div class="custom-form__item">
+                                            <label for="tableName">テーブル名： </label>
+                                            <input type="text" th:field="*{tableName}" id="tableName">
+                                        </div>
+                                        
+                                        <div th:if="${#fields.hasErrors('fileName')}" th:errors="*{fileName}"
+                                            class="form__error">※この項目は必須です</div>
+                                        <div class="custom-form__item">
+                                            <label for="fileName">ファイル名： </label>
+                                            <input type="text" th:field="*{fileName}" id="fileName">
+                                        </div>
+                                    </div>
+
+                                    <div class="hr mb-lg"></div>
+
+                                    <div class="custom-form__down">
+
+                                        <div th:if="*{lastNameForms}" th:each="item, stat : *{lastNameForms}" class="form-block">
+                                            <div class="custom-form__tag">
+                                                <div class="tag__inner" th:text=|${stat.count}:姓|>1:姓</div>
+                                            </div>
+                                            <div th:if="${#fields.hasErrors('lastNameForms[' + stat.index + '].columnName')}" th:errors="*{lastNameForms[__${stat.index}__].columnName}"
+                                            class="form__error">※この項目は必須です</div>
+                                            <div class="custom-form__item">
+                                                <label class="custom-form__label">列名: </label>
+                                                <input class="custom-form__input" type="text" th:field="*{lastNameForms[__${stat.index}__].columnName}">
+                                            </div>
+    
+                                            <div th:if="${#fields.hasErrors('lastNameForms[' + stat.index + '].nameType')}" th:errors="*{lastNameForms[__${stat.index}__].nameType}"
+                                            class="form__error">※この項目は必須です</div>
+
+                                            <div class="btn-zone">
+
+                                                <div class="custom-form__item">
+                                                    <label class="custom-form__label">文字タイプ: </label>
+                                                    <select th:field="*{lastNameForms[__${stat.index}__].nameType}">
+                                                        <option th:each="nameItem: ${nameTypes}" th:value="${nameItem}" th:text="${nameItem.viewName}" th:selected="${nameItem} == *{lastNameForms[__${stat.index}__].nameType}"></option>
+                                                    </select>
+                                                </div>
+                                                <button class="btn-zone__btn" type="submit" name="remove" th:value="|lastName,${stat.index}|"><span>削除</span><i class="far fa-trash-alt fa-lg"></i></button>
+                                            </div>
+            
+                                        </div>
+            
+                                        <div th:if="*{firstNameForms}" th:each="item, stat : *{firstNameForms}" class="form-block">
+                                            <div class="custom-form__tag">
+                                                <div class="tag__inner" th:text=|${stat.count}:名|>1:名</div>
+                                            </div>
+                                            <div th:if="${#fields.hasErrors('firstNameForms[' + stat.index + '].columnName')}" th:errors="*{firstNameForms[__${stat.index}__].columnName}"
+                                            class="form__error">※この項目は必須です</div>
+
+                                            <div class="custom-form__item">
+                                                <label class="custom-form__label">列名: </label>
+                                                <input class="custom-form__input" type="text" th:field="*{firstNameForms[__${stat.index}__].columnName}">
+                                            </div>
+    
+                                            <div th:if="${#fields.hasErrors('firstNameForms[' + stat.index + '].nameType')}" th:errors="*{firstNameForms[__${stat.index}__].nameType}"
+                                            class="form__error">※この項目は必須です</div>
+
+                                            <div class="btn-zone">
+                                                <div class="custom-form__item ">
+                                                    <label class="custom-form__label">文字タイプ: </label>
+                                                    <select th:field="*{firstNameForms[__${stat.index}__].nameType}">
+                                                        <option th:each="nameItem: ${nameTypes}" th:value="${nameItem}" th:text="${nameItem.viewName}" th:selected="${nameItem} == *{firstNameForms[__${stat.index}__].nameType}"></option>
+                                                    </select>
+                                                    
+                                                </div>
+                                                <button class="btn-zone__btn" type="submit" name="remove" th:value="|firstName,${stat.index}|"><span>削除</span><i class="far fa-trash-alt fa-lg"></i></button>
+                                            </div>
+            
+                                        </div>
+                                        
+                                        <div th:if="*{mailAddressForms}" th:each="item, stat : *{mailAddressForms}" class="form-block">
+                                            <div class="custom-form__tag">
+                                                <div class="tag__inner" th:text=|${stat.count}:メール|>1:メール</div>
+                                            </div>
+                                            <div th:if="${#fields.hasErrors('mailAddressForms[' + stat.index + '].columnName')}" th:errors="*{mailAddressForms[__${stat.index}__].columnName}"
+                                            class="form__error">※この項目は必須です</div>
+                                            <div class="custom-form__item">
+                                                <label class="custom-form__label">列名: </label>
+                                                <input class="custom-form__input" type="text" th:field="*{mailAddressForms[__${stat.index}__].columnName}">
+                                            </div>
+                                            <div class="custom-form__item">
+                                                <label class="custom-form__label">アカウント長: </label>
+                                                <input class="custom-form__input" type="number" th:field="*{mailAddressForms[__${stat.index}__].accountLength}">
+                                            </div>
+                                            <div class="custom-form__item">
+                                                <label class="custom-form__label">ドメイン名: </label>
+                                                <input class="custom-form__input" type="text" th:field="*{mailAddressForms[__${stat.index}__].domainName}">
+                                            </div>
+
+                                            <div class="btn-zone mail">
+                                                <button class="btn-zone__btn" type="submit" name="remove" th:value="|mailAddress,${stat.index}|"><span>削除</span><i class="far fa-trash-alt fa-lg"></i></button>
+                                            </div>
+            
+                                        </div>
+            
+                                        <div th:if="*{numberForms}" th:each="item, stat : *{numberForms}" class="form-block">
+                                            <div class="custom-form__tag">
+                                                <div class="tag__inner" th:text=|${stat.count}:数値|>1:数値</div>
+                                            </div>
+                                            <div th:if="${#fields.hasErrors('numberForms[' + stat.index + '].columnName')}" th:errors="*{numberForms[__${stat.index}__].columnName}"
+                                            class="form__error">※この項目は必須です</div>
+                                            <div class="custom-form__item">
+                                                <label class="custom-form__label">列名: </label>
+                                                <input class="custom-form__input" type="text" th:field="*{numberForms[__${stat.index}__].columnName}">
+                                            </div>
+                                            <div th:if="${#fields.hasErrors('numberForms[' + stat.index + '].minNumber')}" th:errors="*{numberForms[__${stat.index}__].minNumber}"
+                                            class="form__error">※この項目は必須です</div>
+                                            <div class="custom-form__item">
+                                                <label class="custom-form__label">最小値: </label>
+                                                <input class="custom-form__input" type="number" th:field="*{numberForms[__${stat.index}__].minNumber}">
+                                            </div>
+                                            <div class="custom-form__item">
+                                                <label class="custom-form__label">最大値: </label>
+                                                <input class="custom-form__input" type="number" th:field="*{numberForms[__${stat.index}__].maxNumber}">
+                                            </div>
+                                            <div th:if="${#fields.hasErrors('numberForms[' + stat.index + '].numberType')}" th:errors="*{numberForms[__${stat.index}__].numberType}"
+                                            class="form__error">※この項目は必須です</div>
+
+                                            <div class="btn-zone">
+                                                <div class="custom-form__item">
+                                                    <label class="custom-form__label">数値タイプ: </label>
+                                                    <select th:field="*{numberForms[__${stat.index}__].numberType}">
+                                                        <option th:each="numberItem: ${numberTypes}" th:value="${numberItem}" th:text="${numberItem.viewName}" th:selected="${numberItem} == *{numberForms[__${stat.index}__].numberType}"></option>
+                                                    </select>
+                                                </div>
+                                                <button class="btn-zone__btn" type="submit" name="remove" th:value="|number,${stat.index}|"><span>削除</span><i class="far fa-trash-alt fa-lg"></i></button>
+
+                                            </div>
+            
+                                        </div>
+                                        
+                                        <div th:if="*{dateTimeForms}" th:each="item, stat : *{dateTimeForms}" class="form-block">
+                                            <div class="custom-form__tag">
+                                                <div class="tag__inner" th:text=|${stat.count}:日付・時刻|>1:日付・時刻</div>
+                                            </div>
+                                            <div th:if="${#fields.hasErrors('dateTimeForms[' + stat.index + '].columnName')}" th:errors="*{dateTimeForms[__${stat.index}__].columnName}"
+                                            class="form__error">※この項目は必須です</div>
+                                            <div class="custom-form__item">
+                                                <label class="custom-form__label">列名: </label>
+                                                <input class="custom-form__input" type="text" th:field="*{dateTimeForms[__${stat.index}__].columnName}">
+                                            </div>
+                                            <div th:if="${#fields.hasErrors('dateTimeForms[' + stat.index + '].minTime')}" th:errors="*{dateTimeForms[__${stat.index}__].minTime}"
+                                            class="form__error">※この項目は必須です</div>
+                                            <div class="custom-form__item">
+                                                <label class="custom-form__label">最小値: </label>
+                                                <input class="custom-form__input date-time" type="datetime-local" step="1" th:field="*{dateTimeForms[__${stat.index}__].minTime}">
+                                            </div>
+                                            <div class="custom-form__item">
+                                                <label class="custom-form__label">最大値: </label>
+                                                <input class="custom-form__input date-time" type="datetime-local" step="1" th:field="*{dateTimeForms[__${stat.index}__].maxTime}">
+                                            </div>
+                                            <div th:if="${#fields.hasErrors('dateTimeForms[' + stat.index + '].timeType')}" th:errors="*{dateTimeForms[__${stat.index}__].timeType}"
+                                            class="form__error">※この項目は必須です</div>
+                                            <div class="btn-zone">
+                                                <div class="custom-form__item ">
+                                                    <label class="custom-form__label">日付タイプ: </label>
+                                                    <select th:field="*{dateTimeForms[__${stat.index}__].timeType}">
+                                                        <option th:each="timeItem: ${timeTypes}" th:value="${timeItem}" th:text="${timeItem.viewName}" th:selected="${timeItem} == *{dateTimeForms[__${stat.index}__].timeType}"></option>
+                                                    </select>
+                                                </div>
+                                                <button class="btn-zone__btn" type="submit" name="remove" th:value="|dateTime,${stat.index}|"><span>削除</span><i class="far fa-trash-alt fa-lg"></i></button>
+
+                                            </div>
+            
+                                        </div>
+                                        
+                                        <div th:if="*{dateForms}" th:each="item, stat : *{dateForms}" class="form-block">
+                                            <div class="custom-form__tag">
+                                                <div class="tag__inner" th:text=|${stat.count}:日付|>1:日付</div>
+                                            </div>
+                                            <div th:if="${#fields.hasErrors('dateForms[' + stat.index + '].columnName')}" th:errors="*{dateForms[__${stat.index}__].columnName}"
+                                            class="form__error">※この項目は必須です</div>
+                                            <div class="custom-form__item">
+                                                <label class="custom-form__label">列名: </label>
+                                                <input class="custom-form__input" type="text" th:field="*{dateForms[__${stat.index}__].columnName}">
+                                            </div>
+                                            <div th:if="${#fields.hasErrors('dateForms[' + stat.index + '].minTime')}" th:errors="*{dateForms[__${stat.index}__].minTime}"
+                                            class="form__error">※この項目は必須です</div>
+                                            <div class="custom-form__item">
+                                                <label class="custom-form__label">最小値: </label>
+                                                <input class="custom-form__input" type="date" th:field="*{dateForms[__${stat.index}__].minTime}">
+                                            </div>
+                                            <div class="custom-form__item">
+                                                <label class="custom-form__label">最大値: </label>
+                                                <input class="custom-form__input" type="date" th:field="*{dateForms[__${stat.index}__].maxTime}">
+                                            </div>
+                                            <div th:if="${#fields.hasErrors('dateForms[' + stat.index + '].timeType')}" th:errors="*{dateForms[__${stat.index}__].timeType}"
+                                            class="form__error">※この項目は必須です</div>
+                                            <div class="btn-zone">
+                                                <div class="custom-form__item ">
+                                                    <label class="custom-form__label">日付タイプ: </label>
+                                                    <select th:field="*{dateForms[__${stat.index}__].timeType}">
+                                                        <option th:each="timeItem: ${timeTypes}" th:value="${timeItem}" th:text="${timeItem.viewName}" th:selected="${timeItem} == *{dateForms[__${stat.index}__].timeType}"></option>
+                                                    </select>
+                                                </div>
+                                                <button class="btn-zone__btn" type="submit" name="remove" th:value="|date,${stat.index}|"><span>削除</span><i class="far fa-trash-alt fa-lg"></i></button>
+
+                                            </div>
+            
+                                        </div>
+            
+                                        <div th:if="*{timeForms}" th:each="item, stat : *{timeForms}" class="form-block">
+                                            <div class="custom-form__tag">
+                                                <div class="tag__inner" th:text=|${stat.count}:時刻|>1：時刻</div>
+                                            </div>
+                                            <div th:if="${#fields.hasErrors('timeForms[' + stat.index + '].columnName')}" th:errors="*{timeForms[__${stat.index}__].columnName}"
+                                            class="form__error">※この項目は必須です</div>
+                                            <div class="custom-form__item">
+                                                <label class="custom-form__label">列名: </label>
+                                                <input class="custom-form__input" type="text" th:field="*{timeForms[__${stat.index}__].columnName}">
+                                            </div>
+                                            <div th:if="${#fields.hasErrors('timeForms[' + stat.index + '].minTime')}" th:errors="*{timeForms[__${stat.index}__].minTime}"
+                                            class="form__error">※この項目は必須です</div>
+                                            <div class="custom-form__item">
+                                                <label class="custom-form__label">最小値: </label>
+                                                <input class="custom-form__input" type="time" step="1" th:field="*{timeForms[__${stat.index}__].minTime}">
+                                            </div>
+                                            <div class="custom-form__item">
+                                                <label class="custom-form__label">最大値: </label>
+                                                <input class="custom-form__input" type="time" step="1" th:field="*{timeForms[__${stat.index}__].maxTime}">
+                                            </div>
+                                            <div th:if="${#fields.hasErrors('timeForms[' + stat.index + '].timeType')}" th:errors="*{timeForms[__${stat.index}__].timeType}"
+                                            class="form__error">※この項目は必須です</div>
+                                            <div class="btn-zone">
+                                                <div class="custom-form__item">
+                                                    <label class="custom-form__label">日付タイプ: </label>
+                                                    <select th:field="*{timeForms[__${stat.index}__].timeType}">
+                                                        <option th:each="timeItem: ${timeTypes}" th:value="${timeItem}" th:text="${timeItem.viewName}" th:selected="${timeItem} == *{timeForms[__${stat.index}__].timeType}">間隔ランダム</option>
+                                                    </select>
+                                                </div>
+                                                <button class="btn-zone__btn" type="submit" name="remove" th:value="|time,${stat.index}|"><span>削除</span><i class="far fa-trash-alt fa-lg"></i></button>
+
+                                            </div>
+
+            
+                                        </div>
+                                    </div>
+
+                                    <div class="add-btn-area">
+                                        <button class="add-btn btn-fill" type="button">列を加える</button>
+                                    </div>
+
+                                    <div class="create-btn-area">
+                                        <input type="submit" value="Insert文作成" name="create" class="btn-fill">
+                                        <input type="submit" value="Excel作成" name="create_excel" class="btn-fill">
+                                    </div>
+
+                                    <div class="form-background">
+                                        <div class="f-b-container">
+                                            <div class="close-icon">
+                                                <div class="close-icon-inner"></div>
+                                                <div class="close-icon-inner"></div>
+                                            </div>
+                                            <div class="f-b-container__inner">
+                                                <div th:object="${addForm}" class="f-b-container__content">
+                                                    <h3 class="info-item-title">加える数量を選択してください</h3>
+                                                    <th:block th:with="labelNames=${ {'姓(苗字)','名(名前)','メールアドレス','数値','日付・時刻','日付','時刻'} }">
+                                                        <div th:each="item, stat : *{addMap}" class="f-b-container__item">
+                                                            <label th:text="${labelNames[__${stat.index}__]}">姓(苗字)</label>
+                                                            <input type="number" th:field="*{addMap[__${item.key}__]}" max="4" min="0">
+                                                        </div>
+                                                    </th:block>
+                                                    <!-- sample -->
+                                                    <!--/* <div class="f-b-container__item">
+                                                        <label>名(名前)</label>
+                                                        <input type="number"max="4" min="0">
+                                                    </div>
+                                                    <div class="f-b-container__item">
+                                                        <label>メールアドレス</label>
+                                                        <input type="number"max="4" min="0">
+                                                    </div>
+                                                    <div class="f-b-container__item">
+                                                        <label>数値</label>
+                                                        <input type="number"max="4" min="0">
+                                                    </div>
+                                                    <div class="f-b-container__item">
+                                                        <label>日付・時刻</label>
+                                                        <input type="number"max="4" min="0">
+                                                    </div>
+                                                    <div class="f-b-container__item">
+                                                        <label>日付</label>
+                                                        <input type="number"max="4" min="0">
+                                                    </div>
+                                                    <div class="f-b-container__item">
+                                                        <label>時刻</label>
+                                                        <input type="number"max="4" min="0">
+                                                    </div> */-->
+                                                    <!-- sample -->
+                                                </div>
+                                                <input type="submit" value="加える" name="add" class="btn-fill">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </form>
+                            </div>
+                        </section>
+
+                        <div class="hr"></div>
+
+                        <section class="use-info">
+                            <div class="use-info-container">
+                                <div class="info-heading use-info-heading">
+                                    <h2 class="heading">作成方法や使い方を見てみよう</h2>
+                                </div>
+
+                                <div class="info-item">
+                                    <h3 class="info-item-title first">列を追加しましょう</h3>
+                                    <div class="item-content">
+                                        <div class="img-double">
+                                            <div class="item-content-img img-move">
+                                                <div class="img-cover">
+                                                    <img src="../static/images/use-img5.png" th:src="@{/images/use-img5.png}"
+                                                        class="img-back">
+                                                </div>
+                                            </div>
+                                            <div class="item-content-img img-move">
+                                                <div class="img-cover">
+                                                    <img src="../static/images/use-img6.png" th:src="@{/images/use-img6.png}"
+                                                        class="img-back">
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="item-content-p">
+                                            <p class="p-btm">
+                                                上の画像の【列を加える】のボタンを押すと下の画像画面が現れます
+                                            </p>
+                                            <p class="p-btm">
+                                                現れたフォームより必要な列の数を選択し【加える】ボタンを押すと、新たに入力フォーム欄が追加されます
+                                            </p>
+                                            <p class="p-btm">
+                                                姓(苗字)・名(名前)・メールアドレス・数値・日付(年月日＋時刻・年月日・時刻)のデータ形式を選択可能です
+                                            </p>
+                                            <p class="p-btm">
+                                                また、間違って挿入したフォーム情報は削除ボタンを押すことで、取り消し可能です
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="arrow">
+                                    <div class="arrow-inner">
+                                        <img src="../static/images/arrow.png" th:src="@{/images/arrow.png}">
+                                    </div>
+                                </div>
+
+                                <div class="info-item">
+                                    <h3 class="info-item-title first">要素数・テーブル名・ファイル名を入力しましょう</h3>
+                                    <div class="item-content">
+                                        <div class="item-content-img img-move">
+                                            <div class="img-cover">
+                                                <img src="../static/images/use-img1.png" th:src="@{/images/use-img1.png}"
+                                                    class="img-back">
+                                            </div>
+                                        </div>
+                                        <div class="item-content-p">
+                                            <p>要素数は作成される行の数を選択します。1~1000まで選択可能です</p>
+                                            <p>テーブル名はDBのテーブル名データに、Excel出力の場合はシート名に変換されます</p>
+                                            <p>ファイル名に指定した値は、???.sql,???.xlsxの?の部分に変換されて出力されます</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="arrow">
+                                    <div class="arrow-inner">
+                                        <img src="../static/images/arrow.png" th:src="@{/images/arrow.png}">
+                                    </div>
+                                </div>
+
+                                <div class="info-item">
+                                    <h3 class="info-item-title first">名前のデータの作成</h3>
+                                    <div class="item-content">
+                                        <div class="item-content-img img-move">
+                                            <div class="img-cover">
+                                                <img src="../static/images/use-img2.png" th:src="@{/images/use-img2.png}"
+                                                    class="img-back">
+                                            </div>
+                                        </div>
+                                        <div class="item-content-p">
+                                            <p>氏名情報はランダムに作成された値が出力されます</p>
+                                            <p>文字タイプは【漢字・かな・ローマ字・全てNull】から選択可能です</p>
+                                            <p>列名はDBのカラム名になります。またExcel出力を選んだ場合はヘッダー情報になります</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="arrow">
+                                    <div class="arrow-inner">
+                                        <img src="../static/images/arrow.png" th:src="@{/images/arrow.png}">
+                                    </div>
+                                </div>
+
+                                <div class="info-item">
+                                    <h3 class="info-item-title first">メールデータの設定</h3>
+                                    <div class="item-content">
+                                        <div class="item-content-img img-move">
+                                            <div class="img-cover">
+                                                <img src="../static/images/use-img3.png" th:src="@{/images/use-img3.png}"
+                                                    class="img-back">
+                                            </div>
+                                        </div>
+                                        <div class="item-content-p">
+                                            <p class="p-btm">
+                                                メールデータの場合はxxxxx@xxx.xx.xxというデータがあった場合を想定すると
+                                            </p>
+                                            <p class="p-btm">
+                                                アカウント長(@以前の文字列)に選択された値 + 1~5文字分のランダムな文字列が生成され、設定されます
+                                            </p>
+                                            <p class="p-btm">
+                                                ドメイン名に設定した値は@以降の文字列として連結されます。何も選択されていない場合はxxx.xx.xxの文字列が追加されます
+                                            </p>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="arrow">
+                                    <div class="arrow-inner">
+                                        <img src="../static/images/arrow.png" th:src="@{/images/arrow.png}">
+                                    </div>
+                                </div>
+
+                                <div class="info-item">
+                                    <h3 class="info-item-title first">数値・日時データなどの作成</h3>
+                                    <div class="item-content">
+                                        <div class="item-content-img img-move">
+                                            <div class="img-cover">
+                                                <img src="../static/images/use-img4.png" th:src="@{/images/use-img4.png}"
+                                                    class="img-back">
+                                            </div>
+                                        </div>
+                                        <div class="item-content-p">
+                                            <p class="p-btm">
+                                                数値データの場合は数値タイプ【間隔ランダム・ランダム・固定値・連番・全てNull】から選択できます
+                                            </p>
+                                            <p class="p-btm">
+                                                間隔ランダムの場合は最小値～最大値で選択された要素の間からランダムな数値を取得し出力されます
+                                            </p>
+                                            <p class="p-btm">
+                                                ランダムの場合は0～2147483647の値からランダムな値が生成されます
+                                            </p>
+                                            <p class="p-btm">
+                                                固定値の場合は最小値で指定された数値で全て出力され、連番の場合は最小値で指定された値から1づつプラスされた値が出力されます
+                                            </p>
+                                        </div>
+
+                                        <div class="item-content-p">
+                                            <p class="p-btm">
+                                                日付データの場合は日付タイプ【間隔ランダム・ランダム・固定値・全てNull】から選択できます
+                                            </p>
+                                            <p class="p-btm">
+                                                間隔ランダムの場合は最小値～最大値で選択された要素の間からランダムな数値を取得し出力されます
+                                            </p>
+                                            <p class="p-btm">
+                                                ランダムの場合は時刻以外は、エポックタイムから本日の値の間からランダムに選択された日付が出力されます
+                                            </p>
+                                            <p class="p-btm">
+                                                固定値の場合は最小値で指定された日付で全て出力されます
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="arrow">
+                                    <div class="arrow-inner">
+                                        <img src="../static/images/arrow.png" th:src="@{/images/arrow.png}">
+                                    </div>
+                                </div>
+
+                                <div class="info-item">
+                                    <h3 class="info-item-title first">全ての設定が完了したら出力しましょう</h3>
+                                    <div class="item-content">
+                                        <div class="item-content-img img-move">
+                                            <div class="img-cover">
+                                                <img src="../static/images/use-img5.png" th:src="@{/images/use-img5.png}"
+                                                    class="img-back">
+                                            </div>
+                                        </div>
+                                        <div class="item-content-p">
+                                            <p class="p-btm">
+                                                Insert文を作成のボタンをクリックすると、sql形式のファイルでダウンロード出来ます。
+                                            </p>
+                                            <p class="p-btm">
+                                                Excel作成のボタンをクリックすると、Excel形式のファイルでダウンロード出来ます
+                                            </p>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </section>
+
+                    </main>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="up-view">
+            <div class="up-view__container">
+                <img src="../static/images/up-arrow.png" th:src="@{/images/up-arrow.png}" class="up-view__img">
+            </div>
+        </div>
+
+        <div class="background">
+            <div class="background-menu">
+                <div class="close">
+                    <span></span>
+                    <span></span>
+                </div>
+                <ul>
+                    <li><a href="#" th:href="@{/home}">ホーム</a></li>
+                    <li><a tabindex="-1" class="help-link">ヘルプ</a></li>
+                    <li><a tabindex="-1" class="use-info-link">使い方</a></li>
+                    <li th:if="${userSession.temporalFilePath}"><a href="#" th:href="@{/upload}">カスタム</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="wait-screen">
+            <div class="wait-screen__container">
+                <div class="wait-str">
+                    読み込み中
+                </div>
+                <div class="wait-str">
+                    しばらくお待ちください...
+                </div>
+                <div class="wait-anime">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <script src="../static/scripts/main.js" th:src="@{/scripts/main.js}"></script>
+    <script src="../static/scripts/libs/observe-img.js" th:src="@{/scripts/libs/observe-img.js}"></script>
+    <script src="../static/scripts/custom.js" th:src="@{/scripts/custom.js}"></script>
+
+    <!--/* <th:block th:if="${useInfo}">
+        <script src="../static/scripts/libs/move-use-info.js" th:src="@{/scripts/libs/move-use-info.js}"></script>
+    </th:block> */-->
+
+</body>
+
+</html>

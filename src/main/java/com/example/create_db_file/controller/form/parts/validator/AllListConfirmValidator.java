@@ -9,6 +9,8 @@ public class AllListConfirmValidator implements ConstraintValidator<AllListConfi
 
     private String message;
 
+    private String field;
+
     @Override
     public void initialize(AllListConfirm constraintAnnotation) {
         message = constraintAnnotation.message();
@@ -24,7 +26,8 @@ public class AllListConfirmValidator implements ConstraintValidator<AllListConfi
         }else{
             message = "※ 列が1つも指定されていません。1つ以上選択してください。";
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate(message).addConstraintViolation();
+            context.buildConstraintViolationWithTemplate(message)
+                    .addPropertyNode(field).addConstraintViolation();
             return false;
         }
     }

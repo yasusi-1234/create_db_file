@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Data
-@AllListConfirm
+@AllListConfirm(field = "createSize")
 public class CreateFromZeroForm {
 
     @Range(min = 1, max = 1000, message = "※数値は1~1000の間で指定可能です")

@@ -16,7 +16,7 @@ import java.util.List;
 public class DateForm {
 
     @NotBlank(message = "この項目は必須です")
-    private String columnName;
+    private String columnName = "date";
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate minTime = LocalDate.now();

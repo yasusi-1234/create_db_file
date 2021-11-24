@@ -16,7 +16,7 @@ import java.util.List;
 public class TimeForm {
 
     @NotBlank(message = "この項目は必須です")
-    private String columnName;
+    private String columnName = "time";
 
     @DateTimeFormat(pattern = "HH:mm:ss")
     private LocalTime minTime = LocalTime.MIN;
