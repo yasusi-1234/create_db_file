@@ -130,8 +130,6 @@ public class CreateFromZeroServiceImpl implements CreateFromZeroService {
             sb.append(");").append(System.lineSeparator());
         }
 
-        System.out.println("making insert string!!!");
-        System.out.println(sb.toString());
         return sb.toString();
     }
 

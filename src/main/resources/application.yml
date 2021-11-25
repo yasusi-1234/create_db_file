@@ -6,11 +6,11 @@ logging:
     org.springframework.web: info
     org:
       hibernate:
-        SQL: debug
-        type:
-          descriptor:
-            sql:
-              BasicBinder: debug
+        SQL: info
+#        type:
+#          descriptor:
+#            sql:
+#              BasicBinder: debug
 
 
 spring:
@@ -18,11 +18,11 @@ spring:
     database: POSTGRESQL
     properties:
       hibernate:
-      format_sql: true
+        format_sql: true
   datasource:
-    url: jdbc:postgresql://localhost:5432/sample2
-    username: sample
-    password: password
+    url: ${DATABASE_URL_SPRINGBOOT:jdbc:postgresql://localhost:5432/sample2}
+    username: ${DATABASE_USER:sample}
+    password: ${DATABASE_PASSWORD:password}
 
 
 

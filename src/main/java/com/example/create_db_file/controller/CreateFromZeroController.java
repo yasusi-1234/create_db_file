@@ -55,15 +55,10 @@ public class CreateFromZeroController {
         model.addAttribute("numberTypes", NumberType.values());
         model.addAttribute("timeTypes", TimeType.values());
 
-        System.out.println("before: " + bindingResult.hasErrors());
-
         if(form.getFirstNameForms().isEmpty()){
             form.addFirstNameForms();
             form.addLastNameForms();
         }
-
-        System.out.println("after: " + bindingResult.hasErrors());
-        System.out.println(form);
 
         return "create_and_custom";
     }
@@ -73,7 +68,7 @@ public class CreateFromZeroController {
             @ModelAttribute("createFromZeroForm") CreateFromZeroForm form,
             @ModelAttribute("addForm") AddForm addForm,
             Model model){
-        System.out.println(addForm);
+
         addForm.addCreateZeroForm(form);
         addForm.initializeValue();
 
@@ -92,10 +87,6 @@ public class CreateFromZeroController {
         model.addAttribute("nameTypes", NameType.values());
         model.addAttribute("numberTypes", NumberType.values());
         model.addAttribute("timeTypes", TimeType.values());
-
-        System.out.println("post-create: " + bindingResult.hasErrors());
-
-        System.out.println(form);
 
         if (bindingResult.hasErrors()){
             return "create_and_custom";
@@ -142,7 +133,6 @@ public class CreateFromZeroController {
         model.addAttribute("numberTypes", NumberType.values());
         model.addAttribute("timeTypes", TimeType.values());
 
-//        System.out.println("requestRemove: removeTarget: " + removeTarget + ", removeIndex: " + removeIndex);
         String[] removeItems = remove.split(",");
         form.removeField(removeItems[0], Integer.parseInt(removeItems[1]));
         return "create_and_custom";
@@ -153,7 +143,6 @@ public class CreateFromZeroController {
         Random rand = new Random();
         for (int i = 0; i < 100; i++) {
             String randStr = RandomString.make(rand.nextInt(7) + 5);
-            System.out.println(randStr);
         }
         return "create_and_custom";
     }
