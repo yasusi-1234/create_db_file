@@ -64,7 +64,6 @@ public class TemporalConfirmValidator implements ConstraintValidator<TemporalCon
             Temporal maxTime = (Temporal) beanWrapper.getPropertyValue(maxName);
 
             message = "最小値・最大値の値が異常です。 min: " + minTime + " > max: " + maxTime;
-            System.out.println(message);
 
             context.disableDefaultConstraintViolation(); // (3) デフォルトのConstraintViolationオブジェクトの生成を無効にする。
             context.buildConstraintViolationWithTemplate(message)
