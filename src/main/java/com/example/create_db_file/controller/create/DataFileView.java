@@ -44,7 +44,9 @@ public class DataFileView extends AbstractView {
         if(StringUtils.hasText(insertSentence)){
             renderInsertFile(model, insertSentence, response);
         }else {
-            renderSampleExcelFile(response);
+            String fileName = (String) model.get("filename");
+            String extension = (String) model.get("extension");
+            renderSampleExcelFile(response, fileName, extension);
         }
     }
 
@@ -65,13 +67,22 @@ public class DataFileView extends AbstractView {
         StreamUtils.copy(new ByteArrayInputStream(insertSentence.getBytes(StandardCharsets.UTF_8)), response.getOutputStream());
     }
 
-    private void renderSampleExcelFile(HttpServletResponse response) throws IOException{
+    private void renderSampleExcelFile(HttpServletResponse response, String filename, String extension) throws IOException{
 
-        Resource resource = resourceLoader.getResource("classpath:sample_data/employee.xlsx");
-        response.setHeader("Content-Disposition", "attachment; filename=" + "employee.xlsx");
-        response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+        Resource resource = resourceLoader.getResource("classpath:sample_data/" + filename + "." + extension);
 
-        StreamUtils.copy(resource.getInputStream(), response.getOutputStream());
+        if(!resource.exists()){
+            resource = resourceLoader.getResource("classpath:sample_data/" + "employee.xlsx");
+            response.setHeader("Content-Disposition", "attachment; filename=" + "employee.xlsx");
+            response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+            StreamUtils.copy(resource.getInputStream(), response.getOutputStream());
+        }else{
+            response.setHeader("Content-Disposition", "attachment; filename=" + filename + "." + extension);
+            response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+
+            StreamUtils.copy(resource.getInputStream(), response.getOutputStream());
+        }
+
     }
 
 
