@@ -17,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -26,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -52,8 +54,18 @@ public class DbFileCreateController {
     }
 
     @GetMapping("/getSample")
-    public String getSampleData(){
-        return "dataFileView";
+    public String getSampleData(
+            @RequestParam(required = false, name = "filename")String filename,
+            @RequestParam(required = false, name = "extension")String extension,
+            @ModelAttribute("originalDataFileForm") OriginalDataFileForm form,
+            Model model) {
+        if(StringUtils.hasText(filename) && StringUtils.hasText(extension)){
+            model.addAttribute("filename", filename);
+            model.addAttribute("extension", extension);
+            return "dataFileView";
+        }
+
+        return "home";
     }
 
     @PostMapping("/upload")
@@ -67,9 +79,17 @@ public class DbFileCreateController {
         if (bindingResult.hasErrors()) {
             return "home";
         }
+        // ファイルの拡張子
+        String extension = getFileExtension(form.getMultipartFile());
 
         try (InputStream in = form.getMultipartFile().getInputStream()) {
-            Map<Integer, String> resultMap = dbFileCreateService.findHeader(in);
+            Map<Integer, String> resultMap = new HashMap<>();
+
+            if(Objects.equals(extension, "xlsx") || Objects.equals(extension, "xls")){
+                resultMap = dbFileCreateService.findHeader(in);
+            }else if(Objects.equals(extension, "csv")){
+                resultMap = dbFileCreateService.findCsvHeader(in);
+            }
 
             if (resultMap.isEmpty()) {
                 // ヘッダーの値が設定されていない、またはデータ部分が無い場合(処理できない為)
@@ -78,11 +98,20 @@ public class DbFileCreateController {
                 return "home";
             }
 
-            // ヘッダーの値が正常だった場合の処理
+            // ヘッダーの値・データの値が正常だった場合の処理
             // ファイルを一時保存する処理
-            String temporalFileName = dbFileCreateService
-                    .fileToSaveTemporarily(form.getMultipartFile().getInputStream(),
-                            form.getMultipartFile().getOriginalFilename());
+
+            String temporalFileName = null;
+
+            if(Objects.equals(extension, "xlsx") || Objects.equals(extension, "xls")){
+                temporalFileName = dbFileCreateService
+                        .fileToSaveTemporarily(form.getMultipartFile().getInputStream(),
+                                form.getMultipartFile().getOriginalFilename());
+            }else if(Objects.equals(extension, "csv")){
+                temporalFileName = dbFileCreateService
+                        .csvFileToSaveTemporarily(form.getMultipartFile().getInputStream(),
+                                form.getMultipartFile().getOriginalFilename());
+            }
 
             if (Objects.nonNull(userSession.getTemporalFilePath())
                     && Files.exists(Path.of(userSession.getTemporalFilePath()))) {
@@ -120,7 +149,14 @@ public class DbFileCreateController {
 
             dbColumnsForm.setTableName(simpleFileName);
 
-            Map<Integer, String> resultMap = dbFileCreateService.findHeader(fileResource.getInputStream());
+            String extension = getFileExtension(fileResource.getFilename());
+
+            Map<Integer, String> resultMap = new HashMap<>();
+            if(Objects.equals(extension, "xlsx") || Objects.equals(extension, "xls")){
+                resultMap = dbFileCreateService.findHeader(fileResource.getInputStream());
+            }else if(Objects.equals(extension, "csv")){
+                resultMap = dbFileCreateService.findCsvHeader(fileResource.getInputStream());
+            }
 
             model.addAttribute("columnType", DBColumn.ColumnType.values());
             createDBColumnsForm(dbColumnsForm, resultMap);
@@ -149,7 +185,15 @@ public class DbFileCreateController {
         try {
             // +++++++++++++++++++
             Resource  fileResource = new FileUrlResource(userSession.getTemporalFilePath());
-            String insertSentence = dbFileCreateService.callMakeInsertSentence(fileResource.getInputStream(), dBColumnsForm);
+            String insertSentence = null;
+
+            String extension = getFileExtension(fileResource.getFilename());
+
+            if(Objects.equals(extension, "xlsx") || Objects.equals(extension, "xls")){
+                insertSentence = dbFileCreateService.callMakeInsertSentence(fileResource.getInputStream(), dBColumnsForm);
+            }else if(Objects.equals(extension, "csv")){
+                insertSentence = dbFileCreateService.callCsvMakeInsertSentence(fileResource.getInputStream(), dBColumnsForm);
+            }
 
             model.addAttribute("insertSentence", insertSentence);
             model.addAttribute("dBColumnsForm", dBColumnsForm);
@@ -191,6 +235,27 @@ public class DbFileCreateController {
      */
     private void createDBColumnsForm(DBColumnsForm form, Map<Integer, String> headerMap) {
         headerMap.entrySet().stream().map(entry -> DBColumn.of(entry.getValue(), entry.getKey())).forEach(form::addColumns);
+    }
+
+    /**
+     * マルチパートファイルの格納されているフィル名の拡張しを取得する
+     * @param file multipartFile
+     * @return file名の拡張子
+     */
+    private String getFileExtension(MultipartFile file){
+        String fileName = file.getOriginalFilename();
+        int dotIndex = fileName.lastIndexOf(".");
+        return fileName.substring(dotIndex + 1);
+    }
+
+    /**
+     * マルチパートファイルの格納されているフィル名の拡張しを取得する
+     * @param fileName ファイル名
+     * @return file名の拡張子
+     */
+    private String getFileExtension(String fileName){
+        int dotIndex = fileName.lastIndexOf(".");
+        return fileName.substring(dotIndex + 1);
     }
 
 //    @GetMapping("happen")
