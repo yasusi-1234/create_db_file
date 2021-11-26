@@ -16,6 +16,7 @@ public class AddForm {
         addMap.put("firstName", 0);
         addMap.put("mailAddress", 0);
         addMap.put("number", 0);
+        addMap.put("string", 0);
         addMap.put("dateTime", 0);
         addMap.put("date", 0);
         addMap.put("time", 0);
@@ -42,6 +43,11 @@ public class AddForm {
                 case "mailAddress" :
                     for (int i = 0; i < loopCount; i++) {
                         createFromZeroForm.addMailAddressForms();
+                    }
+                break;
+                case "string" :
+                    for (int i = 0; i < loopCount; i++) {
+                        createFromZeroForm.addStringDataForms();
                     }
                 break;
                 case "number" :

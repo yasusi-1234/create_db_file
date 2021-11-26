@@ -223,6 +223,43 @@
                                             </div>
             
                                         </div>
+
+                                        <div th:if="*{stringDataForms}" th:each="item, stat : *{stringDataForms}" class="form-block">
+                                            <div class="custom-form__tag">
+                                                <div class="tag__inner" th:text=|${stat.count}:文字列|>1:文字列</div>
+                                            </div>
+                                            <div th:if="${#fields.hasErrors('stringDataForms[' + stat.index + '].columnName')}" th:errors="*{stringDataForms[__${stat.index}__].columnName}"
+                                            class="form__error">※この項目は必須です</div>
+                                            <div class="custom-form__item">
+                                                <label class="custom-form__label">列名: </label>
+                                                <input class="custom-form__input" type="text" th:field="*{stringDataForms[__${stat.index}__].columnName}">
+                                            </div>
+                                            <div class="custom-form__item">
+                                                <label class="custom-form__label">固定文字: </label>
+                                                <input class="custom-form__input" type="text" th:field="*{stringDataForms[__${stat.index}__].fixedString}">
+                                            </div>
+
+                                            <div class="custom-form__item">
+                                                <label class="custom-form__label">最小値: </label>
+                                                <input class="custom-form__input" type="number" min="0" max="99" th:field="*{stringDataForms[__${stat.index}__].minLength}">
+                                            </div>
+                                            <div class="custom-form__item">
+                                                <label class="custom-form__label">最大値: </label>
+                                                <input class="custom-form__input" type="number" min="1" max="100" th:field="*{stringDataForms[__${stat.index}__].maxLength}">
+                                            </div>
+
+                                            <div class="btn-zone">
+                                                <div class="custom-form__item">
+                                                    <label class="custom-form__label">文字タイプ: </label>
+                                                    <select th:field="*{stringDataForms[__${stat.index}__].stringType}">
+                                                        <option th:each="stringItem: ${stringTypes}" th:value="${stringItem}" th:text="${stringItem.viewName}" th:selected="${stringItem} == *{stringDataForms[__${stat.index}__].stringType}"></option>
+                                                    </select>
+                                                </div>
+                                                <button class="btn-zone__btn" type="submit" name="remove" th:value="|string,${stat.index}|"><span>削除</span><i class="far fa-trash-alt fa-lg"></i></button>
+
+                                            </div>
+            
+                                        </div>
                                         
                                         <div th:if="*{dateTimeForms}" th:each="item, stat : *{dateTimeForms}" class="form-block">
                                             <div class="custom-form__tag">
@@ -349,7 +386,7 @@
                                             <div class="f-b-container__inner">
                                                 <div th:object="${addForm}" class="f-b-container__content">
                                                     <h3 class="info-item-title">加える数量を選択してください</h3>
-                                                    <th:block th:with="labelNames=${ {'姓(苗字)','名(名前)','メールアドレス','数値','日付・時刻','日付','時刻'} }">
+                                                    <th:block th:with="labelNames=${ {'姓(苗字)','名(名前)','メールアドレス','数値','文字','日付・時刻','日付','時刻'} }">
                                                         <div th:each="item, stat : *{addMap}" class="f-b-container__item">
                                                             <label th:text="${labelNames[__${stat.index}__]}">姓(苗字)</label>
                                                             <input type="number" th:field="*{addMap[__${item.key}__]}" max="4" min="0">
@@ -569,6 +606,55 @@
                                         <img src="../static/images/arrow.png" th:src="@{/images/arrow.png}">
                                     </div>
                                 </div>
+
+                                <div class="info-item">
+                                    <h3 class="info-item-title first">文字列データの作成</h3>
+                                    <div class="item-content">
+                                        <div class="item-content-img img-move">
+                                            <div class="img-cover">
+                                                <img src="../static/images/use-img7.png" th:src="@{/images/use-img7.png}"
+                                                    class="img-back">
+                                            </div>
+                                        </div>
+                                        <div class="inner-title">
+                                            <h4 class="h4">文字タイプに間隔ランダム・ランダムを選んだ場合</h4>
+                                        </div>
+                                        <div class="item-content-p">
+                                            <p class="p-btm">
+                                                間隔ランダムは、選択値の最小値から最大値までのランダムな文字数が生成されます
+                                            </p>
+                                            <p class="p-btm">
+                                                ランダムは、5~20文字のランダムな文字列が生成されます
+                                            </p>
+
+                                        <div class="inner-title">
+                                            <h4 class="h4">文字タイプがUUIDの場合</h4>
+                                        </div>
+
+                                        <div class="item-content-p">
+                                            <p class="p-btm">
+                                                UUIDによりランダムに生成した値が作成されます
+                                            </p>
+                                        </div>
+
+                                        <div class="inner-title">
+                                            <h4 class="h4">文字タイプが固定値の場合</h4>
+                                        </div>
+
+                                        <div class="item-content-p">
+                                            <p class="p-btm">
+                                                全て固定値で設定した値が出力されます
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="arrow">
+                                    <div class="arrow-inner">
+                                        <img src="../static/images/arrow.png" th:src="@{/images/arrow.png}">
+                                    </div>
+                                </div>
+
 
                                 <div class="info-item">
                                     <h3 class="info-item-title first">全ての設定が完了したら出力しましょう</h3>

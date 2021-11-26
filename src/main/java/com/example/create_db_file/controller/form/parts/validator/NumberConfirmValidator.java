@@ -29,8 +29,8 @@ public class NumberConfirmValidator implements ConstraintValidator<NumberConfirm
 
         boolean matched = true;
 
-        if(numberType == NumberType.Between){
-            matched = minNum <= maxNum;
+        if(numberType == NumberType.Between && minNum > maxNum){
+            matched = false;
             message = "最小値・最大値の値が異常です。 min: " + minNum + " > max: " + maxNum;
         }
 

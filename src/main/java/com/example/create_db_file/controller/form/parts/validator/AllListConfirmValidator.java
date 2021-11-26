@@ -14,6 +14,7 @@ public class AllListConfirmValidator implements ConstraintValidator<AllListConfi
     @Override
     public void initialize(AllListConfirm constraintAnnotation) {
         message = constraintAnnotation.message();
+        field = constraintAnnotation.field();
     }
 
     @Override
