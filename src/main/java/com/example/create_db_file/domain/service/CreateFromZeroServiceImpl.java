@@ -2,24 +2,20 @@ package com.example.create_db_file.domain.service;
 
 import com.example.create_db_file.controller.form.CreateFromZeroForm;
 import com.example.create_db_file.controller.form.parts.*;
-import com.example.create_db_file.domain.model.DummyUser;
 import com.example.create_db_file.domain.model.DummyUserFirstName;
 import com.example.create_db_file.domain.model.DummyUserLastName;
 import com.example.create_db_file.domain.repository.DummyUserFirstNameRepository;
 import com.example.create_db_file.domain.repository.DummyUserLastNameRepository;
-import com.example.create_db_file.domain.repository.DummyUserRepository;
 import com.example.create_db_file.domain.service.dummy.TemporaryDummyUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.utility.RandomString;
-import org.apache.tomcat.jni.Local;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -27,6 +23,7 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -122,6 +119,7 @@ public class CreateFromZeroServiceImpl implements CreateFromZeroService {
             }
             form.getMailAddressForms().forEach(mail -> sb.append(mail.getInsertMailAddress(in)).append(", "));
             form.getNumberForms().forEach(num -> sb.append(num.getInsertNumber(in)).append(", "));
+            form.getStringDataForms().forEach(str -> sb.append(str.getInsertString(in)).append(", "));
             form.getDateTimeForms().forEach(dt -> sb.append(dt.getInsertLocaleDateTime(in)).append(", "));
             form.getDateForms().forEach(d -> sb.append(d.getInsertDateTime(in)).append(", "));
             form.getTimeForms().forEach(t -> sb.append(t.getInsertDateTime(in)).append(", "));
@@ -161,6 +159,7 @@ public class CreateFromZeroServiceImpl implements CreateFromZeroService {
             }
             form.getMailAddressForms().forEach(mail -> dataList.add( mail.getDataMailAddress(in)));
             form.getNumberForms().forEach(num -> dataList.add( num.getInsertNumber(in)));
+            form.getStringDataForms().forEach(str -> dataList.add( str.getDataString(in)));
             form.getDateTimeForms().forEach(dt -> dataList.add( dt.getDataLocaleDateTime(in)));
             form.getDateForms().forEach(d -> dataList.add( d.getDataDateTime(in)));
             form.getTimeForms().forEach(t -> dataList.add( t.getDataDateTime(in)));
@@ -179,6 +178,7 @@ public class CreateFromZeroServiceImpl implements CreateFromZeroService {
     private void setFormData(CreateFromZeroForm form, int createSize){
         setMailAddress(form, createSize);
         setNumbers(form, createSize);
+        setStrings(form, createSize);
         setDateTime(form, createSize);
         setDate(form, createSize);
         setTime(form, createSize);
@@ -245,6 +245,72 @@ public class CreateFromZeroServiceImpl implements CreateFromZeroService {
             numbers.add(ThreadLocalRandom.current().nextLong(startNum, endNum + 1));
         }
         return numbers;
+    }
+
+    /**
+     * フォーム情報のStringDataFormsの情報を元に合致するデータをセットする
+     * @param form フォーム
+     * @param createSize 作成数
+     */
+    private void setStrings(CreateFromZeroForm form, int createSize){
+        form.getStringDataForms().forEach(str -> {
+            List<String> strings;
+            switch (str.getStringType()){
+                case Between:
+                    strings = createBetweenStrings(str.getMinLength(), str.getMaxLength(), createSize);
+                    str.setStringList(strings);
+                    break;
+                case Rand:
+                    strings = createRandomStrings(createSize);
+                    str.setStringList(strings);
+                    break;
+                case UUID:
+                    strings = createUUID(createSize);
+                    str.setStringList(strings);
+            }
+        });
+    }
+
+    /**
+     * 指定された作成分の5~20文字のランダムな文字列を生成し、リスト形式で返却する
+     * @param createSize 作成数
+     * @return 指定された作成分の5~20文字のランダムな文字列のリスト
+     */
+    private List<String> createRandomStrings(int createSize){
+        return createBetweenStrings(5, 20, createSize);
+    }
+
+    /**
+     * 最小値から最大値の間のランダムな文字列を作成数分生成し返却する
+     * @param minLength 最小値の値
+     * @param maxLength 最大値の値
+     * @param createSize 作成数
+     * @return 最小値から最大値の間のランダムな文字列のリスト
+     */
+    private List<String> createBetweenStrings(int minLength, int maxLength, int createSize){
+        List<String> strings = new ArrayList<>();
+
+        if (maxLength > 100){
+            maxLength = 100;
+        }
+        for (int i = 0; i < createSize; i++) {
+            String randStr = RandomString.make(ThreadLocalRandom.current().nextInt(minLength, maxLength + 1));
+            strings.add(randStr);
+        }
+        return strings;
+    }
+
+    /**
+     * 指定された数分のUUIDをリスト形式で返却する
+     * @param createSize 作成数
+     * @return 指定された数分のUUIDのリスト
+     */
+    private List<String> createUUID(int createSize){
+        List<String> uuidList = new ArrayList<>();
+        for (int i = 0; i < createSize; i++) {
+            uuidList.add(UUID.randomUUID().toString());
+        }
+        return uuidList;
     }
 
     /**

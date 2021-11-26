@@ -5,13 +5,10 @@ import com.example.create_db_file.controller.form.CreateFromZeroForm;
 import com.example.create_db_file.controller.form.parts.*;
 import com.example.create_db_file.controller.model.RequestJsonObj;
 import com.example.create_db_file.controller.session.UserSession;
-import com.example.create_db_file.domain.model.DummyUser;
 import com.example.create_db_file.domain.repository.DummyUserRepository;
 import com.example.create_db_file.domain.service.CreateFromZeroService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.stereotype.Controller;
@@ -22,11 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/from_zero")
@@ -54,6 +48,7 @@ public class CreateFromZeroController {
         model.addAttribute("nameTypes", NameType.values());
         model.addAttribute("numberTypes", NumberType.values());
         model.addAttribute("timeTypes", TimeType.values());
+        model.addAttribute("stringTypes", StringType.values());
 
         if(form.getFirstNameForms().isEmpty()){
             form.addFirstNameForms();
@@ -75,6 +70,7 @@ public class CreateFromZeroController {
         model.addAttribute("nameTypes", NameType.values());
         model.addAttribute("numberTypes", NumberType.values());
         model.addAttribute("timeTypes", TimeType.values());
+        model.addAttribute("stringTypes", StringType.values());
         return "create_and_custom";
     }
 
@@ -87,6 +83,7 @@ public class CreateFromZeroController {
         model.addAttribute("nameTypes", NameType.values());
         model.addAttribute("numberTypes", NumberType.values());
         model.addAttribute("timeTypes", TimeType.values());
+        model.addAttribute("stringTypes", StringType.values());
 
         if (bindingResult.hasErrors()){
             return "create_and_custom";
@@ -108,6 +105,7 @@ public class CreateFromZeroController {
         mav.addObject("nameTypes", NameType.values());
         mav.addObject("numberTypes", NumberType.values());
         mav.addObject("timeTypes", TimeType.values());
+        mav.addObject("stringTypes", StringType.values());
 
         if (bindingResult.hasErrors()){
             mav.setViewName("create_and_custom");
@@ -123,8 +121,6 @@ public class CreateFromZeroController {
 
     @PostMapping(path = "/form", params = "remove")
     public String postRemove(
-//            @RequestParam("removeTarget") String removeTarget,
-//            @RequestParam("removeIndex") int removeIndex,
             @RequestParam String remove,
             @ModelAttribute("createFromZeroForm") CreateFromZeroForm form,
             @ModelAttribute("addForm") AddForm addForm,
@@ -132,6 +128,7 @@ public class CreateFromZeroController {
         model.addAttribute("nameTypes", NameType.values());
         model.addAttribute("numberTypes", NumberType.values());
         model.addAttribute("timeTypes", TimeType.values());
+        model.addAttribute("stringTypes", StringType.values());
 
         String[] removeItems = remove.split(",");
         form.removeField(removeItems[0], Integer.parseInt(removeItems[1]));
