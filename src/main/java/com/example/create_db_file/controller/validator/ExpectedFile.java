@@ -28,11 +28,13 @@ import com.example.create_db_file.controller.validator.ExpectedFile.List;
 @Repeatable(List.class)
 public @interface ExpectedFile {
 
-    String message() default "※ファイル形式が不正かあるいは選択されていません。xlsx・xls形式のファイルのみ選択できます。";
+    String message() default "";
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
+
+    String field() default "";
 
     @Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE })
     @Retention(RUNTIME)

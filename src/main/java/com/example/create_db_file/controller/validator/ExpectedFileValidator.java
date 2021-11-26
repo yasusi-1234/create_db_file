@@ -1,5 +1,6 @@
 package com.example.create_db_file.controller.validator;
 
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.ConstraintValidator;
@@ -7,9 +8,12 @@ import javax.validation.ConstraintValidatorContext;
 import java.util.Objects;
 
 public class ExpectedFileValidator implements ConstraintValidator<ExpectedFile, MultipartFile> {
+
+    private String message;
+
     @Override
     public void initialize(ExpectedFile constraintAnnotation) {
-        ConstraintValidator.super.initialize(constraintAnnotation);
+        message = constraintAnnotation.message();
     }
 
     /**
@@ -22,8 +26,13 @@ public class ExpectedFileValidator implements ConstraintValidator<ExpectedFile, 
      */
     @Override
     public boolean isValid(MultipartFile file, ConstraintValidatorContext context) {
-        if(file == null){
+
+        if(file == null || file.isEmpty()){
+            message = "※ ファイルが選択されていません。";
             // fileがnull
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate(message)
+                    .addConstraintViolation();
             return false;
         }
 
@@ -32,10 +41,19 @@ public class ExpectedFileValidator implements ConstraintValidator<ExpectedFile, 
         String xlsxContent = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
         // .xls 形式のコンテントタイプ名
         String xlsContent = "application/vnd.ms-excel";
+        // .csv 形式のコンテントタイプ
+        String csvContent = "text/csv";
         if(Objects.equals(contentType, xlsxContent)
-        || Objects.equals(contentType, xlsContent)){
+        || Objects.equals(contentType, xlsContent)
+        || Objects.equals(contentType, csvContent)){
             return true;
+        }else{
+            message = "※ サポートされていないファイル形式です。";
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate(message)
+                    .addConstraintViolation();
+            return false;
         }
-        return false;
     }
+
 }
