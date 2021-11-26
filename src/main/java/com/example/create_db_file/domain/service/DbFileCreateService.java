@@ -8,7 +8,13 @@ import java.util.Map;
 public interface DbFileCreateService {
     Map<Integer, String> findHeader(InputStream in);
 
+    Map<Integer, String> findCsvHeader(InputStream in);
+
     String fileToSaveTemporarily(InputStream in, String fileName);
 
+    String csvFileToSaveTemporarily(InputStream in, String fileName);
+
     String callMakeInsertSentence(InputStream in, DBColumnsForm form);
+
+    String callCsvMakeInsertSentence(InputStream in, DBColumnsForm form);
 }

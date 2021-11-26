@@ -95,7 +95,9 @@ public class ExcelInformationReader {
             for(int rowIndex = firstRow; rowIndex <= lastRow; rowIndex++){
                 Row moveRow = sheet.getRow(rowIndex);
                 sb.append(leftTemplate);
-                for(int columnIndex = firstColumn; columnIndex < moveRow.getLastCellNum(); columnIndex++){
+
+                // moveRow.getLastCellNum();
+                for(int columnIndex = firstColumn; columnIndex < needColumnIndex.size(); columnIndex++){
                     if(!needColumnIndex.contains(columnIndex)){
                         continue;
                     }

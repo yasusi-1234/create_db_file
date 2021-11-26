@@ -1,6 +1,7 @@
 package com.example.create_db_file.domain.service;
 
 import com.example.create_db_file.controller.form.DBColumnsForm;
+import com.example.create_db_file.domain.service.csv.CsvInformationHelper;
 import com.example.create_db_file.domain.service.excel.ExcelInformationReader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ResourceLoader;
@@ -20,6 +21,8 @@ public class DbFileCreateServiceImpl implements DbFileCreateService{
 
     private final ExcelInformationReader excelReader;
 
+    private final CsvInformationHelper csvHelper;
+
     private final ResourceLoader resourceLoader;
 
     /**
@@ -32,6 +35,11 @@ public class DbFileCreateServiceImpl implements DbFileCreateService{
         return excelReader.analyzeHeader(in);
     }
 
+    @Override
+    public Map<Integer, String> findCsvHeader(InputStream in){
+        return csvHelper.analyzeCsvHeader(in);
+    }
+
     /**
      * Excelファイルを一時的なフォルダに保存する処理
      * 保存するデータのファイル名は時刻情報'yyyyMMddHHmm' と 第二引数のfileNameを
@@ -42,8 +50,6 @@ public class DbFileCreateServiceImpl implements DbFileCreateService{
      */
     @Override
     public String fileToSaveTemporarily(InputStream in, String fileName){
-//        try {
-//            File tempFile = resourceLoader.getResource("classpath:temporal").getFile();
             File tempFile = new File("/tmp");
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSS");
@@ -54,10 +60,20 @@ public class DbFileCreateServiceImpl implements DbFileCreateService{
             // 一時ファイル保存
             excelReader.saveExcelFile(in, path.toString());
             return path.toString();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return "";
-//        }
+    }
+
+    @Override
+    public String csvFileToSaveTemporarily(InputStream in, String fileName){
+        File tempFile = new File("/tmp");
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSS");
+        String formatDate = LocalDateTime.now().format(formatter);
+        String temporalFileName = formatDate + "_" + fileName;
+
+        Path path = Paths.get(tempFile.getAbsolutePath(), temporalFileName);
+
+        csvHelper.saveCsvFile(in, path.toString());
+        return path.toString();
     }
 
     /**
@@ -70,5 +86,17 @@ public class DbFileCreateServiceImpl implements DbFileCreateService{
     @Override
     public String callMakeInsertSentence(InputStream in, DBColumnsForm form){
         return excelReader.makeInsertSentence(in, form);
+    }
+
+    /**
+     * Csv用stream情報とform情報からinsert文を作成し、String型で返却するメソッド
+     * 処理は事態は全てクラスに移譲している
+     * @param in csvファイルから得たInputStream
+     * @param form csvファイルから抽出したい情報などが纏められたFormクラス
+     * @return Csvファイル、抽出したい情報から作成されたInset文の文字列 参考:
+     */
+    @Override
+    public String callCsvMakeInsertSentence(InputStream in, DBColumnsForm form){
+        return csvHelper.makeInsertSentence(in, form);
     }
 }

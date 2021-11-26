@@ -7,7 +7,7 @@
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <meta name="description" content="このサービスはExcelファイルのデータから、データベス(DB)のSQLのInsert文を生成・作成するサービスです" />
+    <meta name="description" content="このサービスはExcelファイル・CSVファイルのデータから、データベス(DB)のSQLのInsert文を生成・作成するサービスです" />
 
     <link rel="shortcut icon" href="../static/images/Insert Maker.png" th:href="@{/images/Insert Maker.png}"
         type="image/x-icon">
@@ -60,7 +60,7 @@
                             </div>
                             <div class="description">
                                 <p class="main__top__description">このサイトはDBのInsert文を作成するサイトです。</p>
-                                <p class="main__top__description">Excelファイルからデータを読み込み、カスタマイズして.sql形式のファイルとしてダウンロードできます。
+                                <p class="main__top__description">Excelファイル・CSVファイルからデータを読み込み、カスタマイズして.sql形式のファイルとしてダウンロードできます。
                                 </p>
                                 <p class="main__top__description">↓からご利用できます。お気軽にお使いください。</p>
                             </div>
@@ -76,7 +76,7 @@
                                 <p th:text="${message}" class="thanks">ご利用ありがとうございました!!</p>
                                 <form class="form" action="#" th:action="@{/upload}" method="post"
                                     enctype="multipart/form-data" th:object="${originalDataFileForm}">
-                                    <div class="form__title">↓こちらにファイルを添付してください</div>
+                                    <div class="form__title">↓こちらにファイルを添付してください(※ 拡張子がxlsx, xls, csvの物の可能です)</div>
 
                                     <div class="form__error" th:if="${#fields.hasErrors('multipartFile')}"
                                         th:errors="*{multipartFile}">※ファイル形式が不正かあるいは選択されていません。xlsx・xls形式のファイルのみ選択できます。
@@ -107,7 +107,10 @@
                                     サンプルデータダウンロード↓
                                 </div>
                                 <div class="sample">
-                                    <a href="#" th:href="@{/getSample}">employee.xlsx</a>
+                                    <a href="#" th:href="@{/getSample?filename=employee&extension=xlsx}">employee.xlsx</a>
+                                </div>
+                                <div class="sample">
+                                    <a href="#" th:href="@{/getSample?filename=employee&extension=csv}">employee.csv</a>
                                 </div>
                             </div>
                         </section>
