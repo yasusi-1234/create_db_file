@@ -82,6 +82,8 @@ public class ExcelInformationReader {
             int firstRow = sheet.getFirstRowNum() + 1;
             int lastRow = rowExistPosition(sheet);
 
+            int headerRowSize = sheet.getRow(sheet.getFirstRowNum()).getLastCellNum();
+
             Row row = sheet.getRow(firstRow);
             if(row == null){
                 return "";
@@ -97,7 +99,7 @@ public class ExcelInformationReader {
                 sb.append(leftTemplate);
 
                 // moveRow.getLastCellNum();
-                for(int columnIndex = firstColumn; columnIndex < needColumnIndex.size(); columnIndex++){
+                for(int columnIndex = firstColumn; columnIndex < headerRowSize; columnIndex++){
                     if(!needColumnIndex.contains(columnIndex)){
                         continue;
                     }
