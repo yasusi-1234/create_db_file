@@ -170,6 +170,13 @@ body {
   position: relative;
 }
 
+.h4-deco, .h4 {
+  font-size: 14px;
+  border-bottom: 2px solid #db8e8e;
+  border-left: 3px solid #db8e8e;
+  background-color: #f9f4f4;
+}
+
 .main__top .title {
   text-align: center;
 }
@@ -672,6 +679,14 @@ body {
     padding-left: 7px;
     border-left: 5px solid #337c11;
   }
+  .h4-deco, .h4 {
+    font-size: 16px;
+    border-bottom: 3px solid #db8e8e;
+    border-left: 5px solid #db8e8e;
+    background-color: #f9f4f4;
+    padding-left: 15px;
+    margin-bottom: 14px;
+  }
   .font-wait, .wait-screen .wait-str {
     font-size: 22px;
   }
@@ -806,6 +821,14 @@ body {
     font-size: 20px;
     padding-left: 9px;
     border-left: 8px solid #337c11;
+  }
+  .h4-deco, .h4 {
+    font-size: 20px;
+    border-bottom: 4px solid #db8e8e;
+    border-left: 8px solid #db8e8e;
+    background-color: #f9f4f4;
+    padding-left: 18px;
+    margin-bottom: 16px;
   }
   .font-wait, .wait-screen .wait-str {
     font-size: 24px;
@@ -977,6 +1000,14 @@ body {
     font-size: 24px;
     padding-left: 12px;
     border-left: 12px solid #337c11;
+  }
+  .h4-deco, .h4 {
+    font-size: 24px;
+    border-bottom: 4px solid #db8e8e;
+    border-left: 12px solid #db8e8e;
+    background-color: #f9f4f4;
+    padding-left: 18px;
+    margin-bottom: 16px;
   }
   .font-wait, .wait-screen .wait-str {
     font-size: 28px;

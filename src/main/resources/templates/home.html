@@ -216,17 +216,27 @@
                                             </div>
                                         </div>
                                         <div class="item-content-p">
+                                            <h4 class="h4">カラム名の設定について</h4>
                                             <p class="p-btm">
-                                                カラム名は省略可能です。省略した場合はindexに出力されている名前が設定されます。
+                                                カラム名は省略可能です。省略した場合はindex番号に出力されている名前が設定されます。
                                             </p>
+                                            <p class="p-btm">
+                                                画像のように本来ヘッダーにidというカラム名が設定されている所にemployee_idとする事で、
+                                                INSERT INTO(id) -> INSET INTO(employee_id)というような出力にカスタマイズ可能です。
+                                            </p>
+                                            <h4 class="h4">列の選択について</h4>
                                             <p class="p-btm">
                                                 この列が必要ない場合は除外を選択することで、Insert文から除外できます。
                                             </p>
+                                            <h4 class="h4">値について</h4>
                                             <p class="p-btm">
-                                                データの値を設定します。String値の場合はInsert分のValueの部分の値に''で囲まれた値が出力されます。
+                                                データの値を設定します。String値の場合はInsert分のValueの部分の値に(')で囲まれた値が出力されます。
                                             </p>
                                             <p class="p-btm">
-                                                Number及びDecimalの場合は''無しの数値のデータとして格納されます。
+                                                Numberの場合は(')で囲まずにそのままの数値のデータとして出力されます。
+                                            </p>
+                                            <p class="p-btm">
+                                                NULLを選択した場合はデータ部分は全てNULLとして出力されます。
                                             </p>
 
                                         </div>

@@ -107,9 +107,10 @@ public class ExcelInformationReader {
 
                     if(dbColumns.get(columnIndex).getType() == DBColumn.ColumnType.STRING){
                         sb.append("'").append(cellValue).append("', ");
-                    }else if(dbColumns.get(columnIndex).getType() == DBColumn.ColumnType.NUMBER
-                    || dbColumns.get(columnIndex).getType() == DBColumn.ColumnType.DECIMAL){
+                    }else if(dbColumns.get(columnIndex).getType() == DBColumn.ColumnType.NUMBER){
                         sb.append(cellValue).append(", ");
+                    }else if(dbColumns.get(columnIndex).getType() == DBColumn.ColumnType.NULL){
+                        sb.append("NULL").append(", ");
                     }
                 }
                 sb.delete(sb.length() - 2, sb.length()).append(");").append(System.lineSeparator());
