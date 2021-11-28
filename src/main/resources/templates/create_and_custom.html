@@ -107,6 +107,7 @@
                                     <div class="hr mb-lg"></div>
 
                                     <div class="custom-form__down">
+                                        <p th:if="${createFromZeroForm.allRequestCount()} == 0" class="form__error">※ 現在列が選択されていません。【列を加える】ボタンから挿入したいの列を選択し挿入してください</p>
 
                                         <div th:if="*{lastNameForms}" th:each="item, stat : *{lastNameForms}" class="form-block">
                                             <div class="custom-form__tag">
@@ -456,13 +457,13 @@
                                         </div>
                                         <div class="item-content-p">
                                             <p class="p-btm">
-                                                上の画像の【列を加える】のボタンを押すと下の画像画面が現れます
+                                                上の画像の【列を加える】のボタンを押すと画像の様な列挿入用のフォーム画面が現れます
                                             </p>
                                             <p class="p-btm">
                                                 現れたフォームより必要な列の数を選択し【加える】ボタンを押すと、新たに入力フォーム欄が追加されます
                                             </p>
                                             <p class="p-btm">
-                                                姓(苗字)・名(名前)・メールアドレス・数値・日付(年月日＋時刻・年月日・時刻)のデータ形式を選択可能です
+                                                姓(苗字)・名(名前)・メールアドレス・数値・文字・日付(年月日＋時刻・年月日・時刻)のデータ形式を選択可能です
                                             </p>
                                             <p class="p-btm">
                                                 また、間違って挿入したフォーム情報は削除ボタンを押すことで、取り消し可能です
@@ -512,7 +513,7 @@
                                         <div class="item-content-p">
                                             <p>氏名情報はランダムに作成された値が出力されます</p>
                                             <p>文字タイプは【漢字・かな・ローマ字・全てNull】から選択可能です</p>
-                                            <p>列名はDBのカラム名になります。またExcel出力を選んだ場合はヘッダー情報になります</p>
+                                            <p>列名はDBのカラム名になります。例えば列名にf_nameと設定した場合、INSERT INTO (f_name)といった具合に出力されることになります。またExcel出力を選んだ場合はヘッダー情報になります</p>
                                         </div>
                                     </div>
                                 </div>
