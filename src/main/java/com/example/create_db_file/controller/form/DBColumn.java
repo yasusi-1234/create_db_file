@@ -36,5 +36,5 @@ public class DBColumn {
      * Insert分生成のvaluesのデータ部分の作成時に使われる
      * String -> '指定文字','3' Number・Decimal -> 3, 3.0
      */
-    public enum ColumnType{ STRING, NUMBER, DECIMAL }
+    public enum ColumnType{ STRING, NUMBER, NULL }
 }

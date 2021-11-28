@@ -2,8 +2,6 @@ package com.example.create_db_file.domain.service.csv;
 
 import com.example.create_db_file.controller.form.DBColumn;
 import com.example.create_db_file.controller.form.DBColumnsForm;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
 import org.springframework.util.StringUtils;
@@ -83,10 +81,10 @@ public class CsvInformationHelperImpl implements CsvInformationHelper {
 
                     if(dbColumns.get(i).getType() == DBColumn.ColumnType.STRING){
                         sb.append("'").append(insertValue).append("', ");
-                    }else if(dbColumns.get(i).getType() == DBColumn.ColumnType.NUMBER
-                            || dbColumns.get(i).getType() == DBColumn.ColumnType.DECIMAL){
-
+                    }else if(dbColumns.get(i).getType() == DBColumn.ColumnType.NUMBER){
                         sb.append(insertValue).append(", ");
+                    }else if(dbColumns.get(i).getType() == DBColumn.ColumnType.NULL){
+                        sb.append("NULL").append(", ");
                     }
                 }
 
