@@ -8,6 +8,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,7 +16,7 @@ import java.util.stream.Stream;
 
 @Data
 @AllListConfirm(field = "createSize")
-public class CreateFromZeroForm {
+public class CreateFromZeroForm implements Serializable {
 
     @Range(min = 1, max = 1000, message = "※数値は1~1000の間で指定可能です")
     private int createSize = 100;

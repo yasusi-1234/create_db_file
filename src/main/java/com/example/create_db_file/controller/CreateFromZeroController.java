@@ -24,7 +24,7 @@ import java.util.Random;
 
 @Controller
 @RequestMapping("/from_zero")
-@SessionAttributes(types = {UserSession.class})
+@SessionAttributes(types = {UserSession.class, CreateFromZeroForm.class})
 @RequiredArgsConstructor
 public class CreateFromZeroController {
 
@@ -39,10 +39,14 @@ public class CreateFromZeroController {
         return new UserSession();
     }
 
+    @ModelAttribute("createFromZeroForm")
+    public CreateFromZeroForm createFromZeroForm() {
+        return new CreateFromZeroForm();
+    }
+
     @GetMapping("/form")
     public String getCreateFromZero(
-            @Validated @ModelAttribute("createFromZeroForm") CreateFromZeroForm form,
-            BindingResult bindingResult,
+            @ModelAttribute("createFromZeroForm") CreateFromZeroForm form,
             @ModelAttribute("addForm") AddForm addForm,
             Model model){
         model.addAttribute("nameTypes", NameType.values());
@@ -50,10 +54,10 @@ public class CreateFromZeroController {
         model.addAttribute("timeTypes", TimeType.values());
         model.addAttribute("stringTypes", StringType.values());
 
-        if(form.getFirstNameForms().isEmpty()){
-            form.addFirstNameForms();
-            form.addLastNameForms();
-        }
+//        if(form.getFirstNameForms().isEmpty()){
+//            form.addFirstNameForms();
+//            form.addLastNameForms();
+//        }
 
         return "create_and_custom";
     }
