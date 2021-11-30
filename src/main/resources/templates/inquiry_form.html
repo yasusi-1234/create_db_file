@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="description" content="このサービスはExcelファイルのデータから、データベス(DB)のSQLのInsert文を生成・作成するサービスです" />
+
+    <link rel="shortcut icon" href="../static/images/Insert Maker.png" th:href="@{/images/Insert Maker.png}"
+        type="image/x-icon">
+
+    <link rel="stylesheet" href="../static/styles/bender/bootstrap-reboot.css"
+        th:href="@{/styles/bender/bootstrap-reboot.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&family=Roboto:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="../static/styles/header/header.css" th:href="@{/styles/header/header.css}">
+
+    <link rel="stylesheet" href="../static/styles/home/home.css" th:href="@{/styles/home/home.css}">
+
+    <title>Insert Maker Custom</title>
+</head>
+
+<body>
+    <div class="global-container">
+        <div class="container">
+
+            <header class="header">
+                <div class="header__inner">
+                    <div class="logo">
+                        <img src="../static/images/logo.png" th:src="@{/images/logo.png}" class="logo__img">
+                    </div>
+                    <div class="top-menu">
+                        <ul>
+                            <li><a href="#" th:href="@{/from_zero/form}">0から作成</a></li>
+                            <li th:if="${userSession.temporalFilePath}"><a href="#" th:href="@{/upload}">カスタム</a></li>
+                            <li><a href="#" th:href="@{/home?useInfo=true}">使い方</a></li>
+                            <li><a tabindex="-1" class="help-link" th:href="@{/inquiry}">問合せ</a></li>
+                            <li><a href="#" th:href="@{/home}">ホーム</a></li>
+                        </ul>
+                    </div>
+                    <div class="nav-area">
+                        <div class="nav-menu">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content">
+                <div class="main-content">
+                    <main class="main">
+                        <section class="main__top">
+                            <div class="title">
+                                <h1 class="main__top__title">お問合せフォーム</h1>
+                            </div>
+                            <div class="description">
+                                <p class="main__top__description">こちらはお問合せフォームになります。</p>
+                                <p class="main__top__description">バグの発見・アプリケーションの修正・追加してほしい機能、等有りましたらお気軽にお問合せ下さい。</p>
+                            </div>
+                        </section>
+
+                        <div class="hr"></div>
+
+                        <section>
+                            <div class="form-area">
+                                <div class="form-heading custom-heading">
+                                    <h2 class="heading">お問合せ</h2>
+                                </div>
+
+                                <form class="custom-form" action="#" th:action="@{/inquiry/request}"
+                                    th:object="${inquiryForm}" method="post">
+
+                                    <p th:text="${complete}" class="thanks">ご意見・ご質問の方頂きありがとうございます!!</p>
+
+                                    <div class="custom-form__warn">↓こちらから送信可能です。カテゴリーとご意見・ご質問内容等を記述頂き、送信してください。</div>
+
+                                    <div class="form-block">
+                                        <div class="form-block__item">
+
+                                            <div th:if="${#fields.hasErrors('inquiryCategory')}"
+                                                th:errors="*{inquiryCategory}" class="form__error">※テーブル名を入力してください</div>
+
+                                            <div class="custom-form__item ">
+                                                <label for="category" class="custom-form__label">カテゴリー: </label>
+                                                <select th:field="*{inquiryCategory}" id="category">
+                                                    <option th:each="item: ${categories}" th:value="${item}"
+                                                        th:text="${item.viewName}"
+                                                        th:selected="${item} == *{inquiryCategory}">リクエスト</option>
+                                                </select>
+                                            </div>
+
+                                            <div th:if="${#fields.hasErrors('contents')}" th:errors="*{contents}"
+                                                class="form__error">※テーブル名を入力してください</div>
+                                                <div class="custom-form__item ">
+                                                <label for="contents" class="custom-form__label">ご意見・ご質問: </label>
+                                                <div>
+                                                    <textarea name="contents" id="contents" cols="100" rows="8" maxlength="1000"
+                                                    th:field="*{contents}" class="form-textarea" 
+                                                    placeholder="※ 詳細はなるべく細かく書いて頂けると助かります。"></textarea>
+                                                </div>
+                                            </div>
+
+                                            <div class="btn-area">
+                                                <input type="submit" value="送信" class="btn-fill">
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+
+
+                                </form>
+
+                            </div>
+                        </section>
+
+                    </main>
+                </div>
+            </div>
+
+
+        </div>
+
+        <div class="up-view">
+            <div class="up-view__container">
+                <img src="../static/images/up-arrow.png" th:src="@{/images/up-arrow.png}" class="up-view__img">
+            </div>
+        </div>
+
+        <div class="background">
+            <div class="background-menu">
+                <div class="close">
+                    <span></span>
+                    <span></span>
+                </div>
+                <ul>
+                    <li><a href="#" th:href="@{/home}">ホーム</a></li>
+                    <li><a tabindex="-1" class="help-link" th:href="@{/inquiry}">問合せ</a></li>
+                    <li><a href="#" th:href="@{/home?useInfo=true}">使い方</a></li>
+                    <li th:if="${userSession.temporalFilePath}"><a href="#" th:href="@{/upload}">カスタム</a></li>
+                    <li><a href="#" th:href="@{/from_zero/form}">0から作成</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="../static/scripts/main.js" th:src="@{/scripts/main.js}"></script>
+</body>
+
+</html>
