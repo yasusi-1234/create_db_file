@@ -509,6 +509,10 @@ body{
     @extend .h4-deco;
 }
 
+.form-textarea {
+    width: 100%;
+}
+
 @keyframes kf-wait-animation {
     0%, 100%{
         transform: translateY(0);

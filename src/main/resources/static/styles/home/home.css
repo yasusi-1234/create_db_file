@@ -627,6 +627,10 @@ body {
           animation-delay: -1.26s;
 }
 
+.form-textarea {
+  width: 100%;
+}
+
 @-webkit-keyframes kf-wait-animation {
   0%, 100% {
     -webkit-transform: translateY(0);
@@ -698,6 +702,7 @@ body {
     text-align: left;
   }
   .main__top__title {
+    display: block;
     margin-top: 7px;
     border-bottom: 3px solid rgba(189, 83, 83, 0.6);
     border-top: 3px solid rgba(189, 83, 83, 0.6);

@@ -12,8 +12,8 @@
     <link rel="shortcut icon" href="../static/images/Insert Maker.png" th:href="@{/images/Insert Maker.png}"
         type="image/x-icon">
 
-    <link rel="stylesheet" href="../static/styles/vender/bootstrap-reboot.css"
-        th:href="@{/styles/vender/bootstrap-reboot.css}">
+    <link rel="stylesheet" href="../static/styles/bender/bootstrap-reboot.css"
+        th:href="@{/styles/bender/bootstrap-reboot.css}">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&family=Roboto:wght@400;700&display=swap"
         rel="stylesheet">
 
@@ -37,7 +37,7 @@
                             <li><a href="#" th:href="@{/from_zero/form}">0から作成</a></li>
                             <li th:if="${userSession.temporalFilePath}"><a href="#" th:href="@{/upload}">カスタム</a></li>
                             <li><a tabindex="-1" class="use-info-link">使い方</a></li>
-                            <li><a tabindex="-1" class="help-link">ヘルプ</a></li>
+                            <li><a tabindex="-1" class="help-link" th:href="@{/inquiry}">問合せ</a></li>
                             <li><a href="#" th:href="@{/home}">ホーム</a></li>
                         </ul>
                     </div>
@@ -305,7 +305,7 @@
                 </div>
                 <ul>
                     <li><a href="#" th:href="@{/home}">ホーム</a></li>
-                    <li><a tabindex="-1" class="help-link">ヘルプ</a></li>
+                    <li><a tabindex="-1" class="help-link" th:href="@{/inquiry}">問合せ</a></li>
                     <li><a tabindex="-1" class="use-info-link">使い方</a></li>
                     <li th:if="${userSession.temporalFilePath}"><a href="#" th:href="@{/upload}">カスタム</a></li>
                     <li><a href="#" th:href="@{/from_zero/form}">0から作成</a></li>
