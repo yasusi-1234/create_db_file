@@ -16,6 +16,26 @@
   color: white;
 }
 
+.btn-fill.btn-success {
+  border-color: #26c526;
+  color: #26c526;
+}
+
+.btn-fill.btn-success:hover {
+  background-color: #26c526;
+  color: #cdf7cd;
+}
+
+.btn-fill.btn-done {
+  border-color: #2929c3;
+  color: #2929c3;
+}
+
+.btn-fill.btn-done:hover {
+  background-color: #9494eb;
+  color: blue;
+}
+
 .mb-lg {
   margin-bottom: 15px;
 }

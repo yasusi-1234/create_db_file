@@ -210,6 +210,15 @@
     }
 }
 
+.icon-el{
+    font-size: 24px;
+}
+
+.btn-fill.btn-home{
+    width: 125px;
+    height: 48px;
+}
+
 @keyframes kf-wait-animation {
     0%, 100%{
         transform: translateY(0);

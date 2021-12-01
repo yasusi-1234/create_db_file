@@ -52,4 +52,14 @@ window.addEventListener('DOMContentLoaded', () => {
     if(sendBtn){
         sendBtn.addEventListener('click', () => waitScreen.classList.add('in-view'));
     }
+    
+    // const waitBtn = document.querySelectorAll('.wait-btn');
+    // waitBtn.forEach(btn => {
+    //     if(btn){
+    //         btn.addEventListener('click', e => {
+    //             waitScreen.classList.add('in-view');
+    //         });
+    //     }
+    // })
+    
 });

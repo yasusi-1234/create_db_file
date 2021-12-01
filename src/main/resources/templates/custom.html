@@ -14,12 +14,17 @@
 
     <link rel="stylesheet" href="../static/styles/bender/bootstrap-reboot.css"
         th:href="@{/styles/bender/bootstrap-reboot.css}">
+    <link
+        href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp"
+        rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&family=Roboto:wght@400;700&display=swap"
         rel="stylesheet">
 
     <link rel="stylesheet" href="../static/styles/header/header.css" th:href="@{/styles/header/header.css}">
-    
+
     <link rel="stylesheet" href="../static/styles/home/home.css" th:href="@{/styles/home/home.css}">
+    <link rel="stylesheet" href="../static/styles/custom_form/custom-form.css"
+        th:href="@{/styles/custom_form/custom-form.css}">
 
     <title>Insert Maker Custom</title>
 </head>
@@ -75,7 +80,7 @@
 
                                 <form class="custom-form" action="#" th:action="@{/create}" th:object="${dBColumnsForm}"
                                     method="post">
-                                    <div class="custom-form__warn">※ファイル名を指定しなかった場合は<span>sample.sql</span>になります</div>
+                                    <div class="custom-form__warn">※ファイル名を指定しなかった場合は<span class="in-span">sample.sql</span>になります</div>
 
                                     <div th:if="${#fields.hasErrors('fileName')}" th:errors="*{fileName}"
                                         class="form__error">※使用できない文字が含まれています</div>
@@ -103,50 +108,71 @@
 
                                     <div th:each="col, stat : *{columns}" class="form-block">
                                         <div class="form-block__item">
+                                            <div class="form-block__el form-check">
+                                                <input type="checkbox" th:field="*{columns[__${stat.index}__].include}"
+                                                    class="checkbox-el">
+                                            </div>
+                                            <!--/* th:value="*{columns[__${stat.index}__].include}" th:name="${col.columnIndex}" */-->
                                             <input type="hidden" th:field="*{columns[__${stat.index}__].columnName}">
                                             <input type="hidden" th:field="*{columns[__${stat.index}__].columnIndex}">
-                                            <div th:text="|index${col.columnIndex}： ${col.columnName}|" class="column">
-                                                index1： first_name</div>
 
-                                            <div class="form-block__el column-name">
-                                                <label th:for="${col.columnIndex}">カラム名：</label>
-                                                <input type="text"
-                                                    th:field="*{columns[__${stat.index}__].changeColumnName}"
-                                                    th:id="${col.columnIndex}">
-                                            </div>
 
-                                            <div class="form-block__el">
-                                                <label class="column-include">列の選択：</label>
-                                                <div class="radio">
-                                                    <input type="radio" th:name="${col.columnIndex}" th:text="含む"
-                                                        th:value="true"
-                                                        th:field="*{columns[__${stat.index}__].include}">
-                                                    <!-- 含む -->
+                                            <div class="form-bound">
+                                                <div class="form-index">
+                                                    <div th:text="|index${col.columnIndex}: ${col.columnName}|"
+                                                        class="column">
+                                                        index1: first_name</div>
+                                                    <span class="form-exclusion">※列除外</span>
                                                 </div>
-                                                <div class="radio exclusion">
-                                                    <input type="radio" th:name="${col.columnIndex}" th:text="除外"
-                                                        th:value="false"
-                                                        th:field="*{columns[__${stat.index}__].include}">
-                                                    <!-- 除外 -->
-                                                </div>
-                                            </div>
 
-                                            <div class="form-block__el">
-                                                <label class="data-type">値：</label>
-                                                <div class="radio" th:each="ct: ${columnType}">
-                                                    <input type="radio" th:name="${ct}" th:text="${ct.name()}"
-                                                        th:value="${ct.name()}"
-                                                        th:field="*{columns[__${stat.index}__].type}">
-                                                    <!-- STRING -->
+                                                <div class="form-block__el column-name">
+                                                    <label th:for="${col.columnIndex}">カラム名：</label>
+                                                    <input type="text"
+                                                        th:field="*{columns[__${stat.index}__].changeColumnName}"
+                                                        th:id="${col.columnIndex}" class="form-text">
                                                 </div>
+
+                                                <!-- <div class="form-block__el">
+                                                    <label class="column-include">列の選択：</label>
+                                                    <div class="radio">
+                                                        <input type="radio" th:name="${col.columnIndex}" th:text="含む"
+                                                            th:value="true"
+                                                            th:field="*{columns[__${stat.index}__].include}">
+                                                        
+                                                    </div>
+                                                    <div class="radio exclusion">
+                                                        <input type="radio" th:name="${col.columnIndex}" th:text="除外"
+                                                            th:value="false"
+                                                            th:field="*{columns[__${stat.index}__].include}">
+                                                        
+                                                    </div>
+                                                </div> -->
+
+                                                <div class="form-block__el">
+                                                    <label class="data-type">値：</label>
+                                                    <div class="radio" th:each="ct: ${columnType}">
+                                                        <input type="radio" th:name="${ct}" th:text="${ct.name()}"
+                                                            th:value="${ct.name()}"
+                                                            th:field="*{columns[__${stat.index}__].type}"
+                                                            class="form-radio">
+                                                        <!-- STRING -->
+                                                    </div>
+                                                </div>
+
                                             </div>
                                         </div>
                                     </div>
 
 
                                     <div class="btn-area">
-                                        <input type="submit" value="作成" name="create" class="btn-fill">
-                                        <input type="submit" value="終了" name="endCreate" class="btn-fill">
+                                        <button type="submit" name="create" class="btn-fill btn-done">
+                                            <span class="material-icons-outlined icon-el">file_download</span>
+                                            作成
+                                        </button>
+                                        <button type="submit" name="endCreate" class="btn-fill">
+                                            <span class="material-icons-outlined icon-el">logout</span>
+                                            終了
+                                        </button>
                                     </div>
 
                                 </form>
@@ -185,6 +211,7 @@
     </div>
 
     <script src="../static/scripts/main.js" th:src="@{/scripts/main.js}"></script>
+    <script src="../static/scripts/custom-form.js" th:src="@{/scripts/custom-form.js}"></script>
 </body>
 
 </html>

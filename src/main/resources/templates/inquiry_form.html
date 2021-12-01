@@ -16,10 +16,14 @@
         th:href="@{/styles/bender/bootstrap-reboot.css}">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&family=Roboto:wght@400;700&display=swap"
         rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp"
+        rel="stylesheet">
 
     <link rel="stylesheet" href="../static/styles/header/header.css" th:href="@{/styles/header/header.css}">
 
     <link rel="stylesheet" href="../static/styles/home/home.css" th:href="@{/styles/home/home.css}">
+    <link rel="stylesheet" href="../static/styles/inquiry/inquiry.css" th:href="@{/styles/inquiry/inquiry.css}">
 
     <title>Insert Maker Custom</title>
 </head>
@@ -97,17 +101,19 @@
 
                                             <div th:if="${#fields.hasErrors('contents')}" th:errors="*{contents}"
                                                 class="form__error">※テーブル名を入力してください</div>
-                                                <div class="custom-form__item ">
+                                            <div class="custom-form__item ">
                                                 <label for="contents" class="custom-form__label">ご意見・ご質問: </label>
                                                 <div>
-                                                    <textarea name="contents" id="contents" cols="100" rows="8" maxlength="1000"
-                                                    th:field="*{contents}" class="form-textarea" 
-                                                    placeholder="※ 詳細はなるべく細かく書いて頂けると助かります。"></textarea>
+                                                    <textarea name="contents" id="contents" cols="100" rows="8"
+                                                        maxlength="1000" th:field="*{contents}" class="form-textarea"
+                                                        placeholder="※ 詳細はなるべく細かく書いて頂けると助かります。"></textarea>
                                                 </div>
                                             </div>
 
                                             <div class="btn-area">
-                                                <input type="submit" value="送信" class="btn-fill">
+                                                <button type="submit" class="btn-fill btn-success">
+                                                    <span class="material-icons-outlined icon-el">mail</span>
+                                                送信</button>
                                             </div>
                                         </div>
 

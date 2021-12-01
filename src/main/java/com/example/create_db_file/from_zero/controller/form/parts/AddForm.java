@@ -27,7 +27,7 @@ public class AddForm {
     }
 
     public void addCreateZeroForm(CreateFromZeroForm createFromZeroForm){
-        this.addMap.entrySet().stream().filter(e -> e.getValue() > 0).forEach(entry -> {
+        this.addMap.entrySet().stream().filter(e -> e.getValue() != null && e.getValue() > 0).forEach(entry -> {
             int loopCount = entry.getValue() > 4 ? 4 : entry.getValue();
             switch (entry.getKey()){
                 case "firstName" :

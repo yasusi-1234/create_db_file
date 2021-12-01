@@ -16,6 +16,26 @@
   color: white;
 }
 
+.btn-fill.btn-success {
+  border-color: #26c526;
+  color: #26c526;
+}
+
+.btn-fill.btn-success:hover {
+  background-color: #26c526;
+  color: #cdf7cd;
+}
+
+.btn-fill.btn-done {
+  border-color: #2929c3;
+  color: #2929c3;
+}
+
+.btn-fill.btn-done:hover {
+  background-color: #9494eb;
+  color: blue;
+}
+
 .nav-area {
   position: relative;
 }
@@ -631,6 +651,32 @@ body {
   width: 100%;
 }
 
+.btn-fill.btn-home {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.icon-el {
+  margin-right: 5px;
+  font-size: 18px;
+}
+
+.home-submit {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
 @-webkit-keyframes kf-wait-animation {
   0%, 100% {
     -webkit-transform: translateY(0);
@@ -798,6 +844,13 @@ body {
     height: 20px;
     margin: 0 3px;
   }
+  .home-submit {
+    display: block;
+  }
+  .btn-fill.btn-home {
+    width: 110px;
+    height: 42px;
+  }
 }
 
 @media (min-width: 600px) {
@@ -956,6 +1009,13 @@ body {
     height: 25px;
     margin: 0 6px;
   }
+  .icon-el {
+    font-size: 24px;
+  }
+  .btn-fill.btn-home {
+    width: 125px;
+    height: 48px;
+  }
   @-webkit-keyframes kf-wait-animation {
     0%, 100% {
       -webkit-transform: translateY(0);
@@ -1035,8 +1095,8 @@ body {
     font-size: 18px;
   }
   .form-area .form .btn-fill {
-    height: 50px;
-    width: 140px;
+    height: 56px;
+    width: 145px;
   }
   .form-area .custom-form .form__error {
     margin-bottom: 8px;
