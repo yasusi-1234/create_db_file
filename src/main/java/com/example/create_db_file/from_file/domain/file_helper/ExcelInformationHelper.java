@@ -14,8 +14,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Component
-public class ExcelInformationReader {
+@Component("excelInformationHelper")
+public class ExcelInformationHelper implements FileInformationHelper{
 
     /**
      * Excelデータのヘッダー部分を読み込み値と位置を読み取り
@@ -25,6 +25,7 @@ public class ExcelInformationReader {
      * @param in Excelファイルのデータstream
      * @return Key:ヘッダーの位置 Value:ヘッダーの値を格納したMap
      */
+    @Override
     public Map<Integer, String> analyzeHeader(InputStream in){
         Map<Integer, String> headerMap = new LinkedHashMap<>();
         try(Workbook workbook = WorkbookFactory.create(in)){
@@ -60,7 +61,8 @@ public class ExcelInformationReader {
      * @param in Excelファイルのデータstream
      * @param newFilePath 保存するPath
      */
-    public void saveExcelFile(InputStream in, String newFilePath){
+    @Override
+    public void saveFile(InputStream in, String newFilePath){
         try(Workbook workbook = WorkbookFactory.create(in);
             FileOutputStream out = new FileOutputStream(newFilePath)
         ){
@@ -76,6 +78,7 @@ public class ExcelInformationReader {
      * @param form 作成したいInsert文の情報Object
      * @return Excelファイル情報から作成したinsert文の文字列
      */
+    @Override
     public String makeInsertSentence(InputStream in, DBColumnsForm form){
         try(Workbook workbook = WorkbookFactory.create(in)){
             Sheet sheet = workbook.getSheetAt(0);
