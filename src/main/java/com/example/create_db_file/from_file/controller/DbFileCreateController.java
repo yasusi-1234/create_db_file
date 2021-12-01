@@ -12,6 +12,7 @@ import org.springframework.core.io.FileUrlResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -79,56 +80,37 @@ public class DbFileCreateController {
         if (bindingResult.hasErrors()) {
             return "home";
         }
-        // ファイルの拡張子
-        String extension = getFileExtension(form.getMultipartFile());
 
-        try (InputStream in = form.getMultipartFile().getInputStream()) {
-            Map<Integer, String> resultMap = new HashMap<>();
+        Map<Integer, String> resultMap = dbFileCreateService.findHeader(form.getMultipartFile());
 
-            if(Objects.equals(extension, "xlsx") || Objects.equals(extension, "xls")){
-                resultMap = dbFileCreateService.findHeader(in);
-            }else if(Objects.equals(extension, "csv")){
-                resultMap = dbFileCreateService.findCsvHeader(in);
-            }
+        if (resultMap.isEmpty()) {
+            // ヘッダーの値が設定されていない、またはデータ部分が無い場合(処理できない為)
+            model.addAttribute("noHeader",
+                    "※ヘッダーの値が読み取れないか、あるいはデータが情報が不足しています。ファイルを確認してください。");
+            return "home";
+        }
 
-            if (resultMap.isEmpty()) {
-                // ヘッダーの値が設定されていない、またはデータ部分が無い場合(処理できない為)
+        String temporalFileName = dbFileCreateService.fileToSaveTemporarily(form.getMultipartFile());
+
+        if (Objects.nonNull(userSession.getTemporalFilePath())
+                && Files.exists(Path.of(userSession.getTemporalFilePath()))) {
+            // セッションに既にファイルがpathが格納されている、かつファイルも存在する
+            try {
+                Files.delete(Path.of(userSession.getTemporalFilePath()));
+            } catch (IOException e) {
+                e.printStackTrace();
                 model.addAttribute("noHeader",
-                        "※ヘッダーの値が読み取れないか、あるいはデータが情報が不足しています。ファイルを確認してください。");
+                        "※予期しないエラーが発生しました。申し訳ありませんがやり直してください。");
                 return "home";
             }
-
-            // ヘッダーの値・データの値が正常だった場合の処理
-            // ファイルを一時保存する処理
-
-            String temporalFileName = null;
-
-            if(Objects.equals(extension, "xlsx") || Objects.equals(extension, "xls")){
-                temporalFileName = dbFileCreateService
-                        .fileToSaveTemporarily(form.getMultipartFile().getInputStream(),
-                                form.getMultipartFile().getOriginalFilename());
-            }else if(Objects.equals(extension, "csv")){
-                temporalFileName = dbFileCreateService
-                        .csvFileToSaveTemporarily(form.getMultipartFile().getInputStream(),
-                                form.getMultipartFile().getOriginalFilename());
-            }
-
-            if (Objects.nonNull(userSession.getTemporalFilePath())
-                    && Files.exists(Path.of(userSession.getTemporalFilePath()))) {
-                // セッションに既にファイルがpathが格納されている、かつファイルも存在する
-                Files.delete(Path.of(userSession.getTemporalFilePath()));
-            }
-
-            userSession.setTemporalFilePath(temporalFileName);
-
-            String redirectPath = MvcUriComponentsBuilder.relativeTo(uriComponentsBuilder)
-                    .withMappingName("DFCC#getUpload").encode().build();
-
-            return "redirect:" + redirectPath;
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-        return "home";
+
+        userSession.setTemporalFilePath(temporalFileName);
+
+        String redirectPath = MvcUriComponentsBuilder.relativeTo(uriComponentsBuilder)
+                .withMappingName("DFCC#getUpload").encode().build();
+
+        return "redirect:" + redirectPath;
     }
 
     @GetMapping(path = "/upload")
@@ -142,30 +124,16 @@ public class DbFileCreateController {
             return "home";
         }
 
-        try {
-            Resource fileResource = new FileUrlResource(userSession.getTemporalFilePath());
+        Map<Integer, String> resultMap = dbFileCreateService.findHeader(userSession.getTemporalFilePath(), dbColumnsForm);
 
-            String simpleFileName = CommonUtils.getResourceSimpleFileName(fileResource);
-
-            dbColumnsForm.setTableName(simpleFileName);
-
-            String extension = getFileExtension(fileResource.getFilename());
-
-            Map<Integer, String> resultMap = new HashMap<>();
-            if(Objects.equals(extension, "xlsx") || Objects.equals(extension, "xls")){
-                resultMap = dbFileCreateService.findHeader(fileResource.getInputStream());
-            }else if(Objects.equals(extension, "csv")){
-                resultMap = dbFileCreateService.findCsvHeader(fileResource.getInputStream());
-            }
-
-            model.addAttribute("columnType", DBColumn.ColumnType.values());
-            createDBColumnsForm(dbColumnsForm, resultMap);
-            return "custom";
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(CollectionUtils.isEmpty(resultMap)){
+            model.addAttribute("noHeader",
+                    "※予期しないエラーが発生しました。申し訳ありませんがやり直してください。");
             return "home";
+        }else{
+            model.addAttribute("columnType", DBColumn.ColumnType.values());
+            return "custom";
         }
-
 
     }
 
@@ -183,18 +151,7 @@ public class DbFileCreateController {
         }
 
         try {
-            // +++++++++++++++++++
-            Resource  fileResource = new FileUrlResource(userSession.getTemporalFilePath());
-            String insertSentence = null;
-
-            String extension = getFileExtension(fileResource.getFilename());
-
-            if(Objects.equals(extension, "xlsx") || Objects.equals(extension, "xls")){
-                insertSentence = dbFileCreateService.callMakeInsertSentence(fileResource.getInputStream(), dBColumnsForm);
-            }else if(Objects.equals(extension, "csv")){
-                insertSentence = dbFileCreateService.callCsvMakeInsertSentence(fileResource.getInputStream(), dBColumnsForm);
-            }
-
+            String insertSentence = dbFileCreateService.makeInsertSentence(userSession.getTemporalFilePath(), dBColumnsForm);
             model.addAttribute("insertSentence", insertSentence);
             model.addAttribute("dBColumnsForm", dBColumnsForm);
             return "dataFileView";
@@ -203,6 +160,7 @@ public class DbFileCreateController {
             model.addAttribute("message", "タイムアウト！申し訳ありませんが最初からやり直してください。");
             return "home";
         }
+
     }
 
     @PostMapping(path = "create", params = "endCreate")
@@ -223,39 +181,6 @@ public class DbFileCreateController {
         String redirectPath = MvcUriComponentsBuilder.relativeTo(uriComponentsBuilder)
                 .withMappingName("DFCC#getHome").encode().build();
         return "redirect:" + redirectPath;
-    }
-
-    /**
-     * Excelファイルから読みだされたHeader情報(headerMap)より
-     * DBColumnオブジェクトをそれぞれ生成し {@link DBColumn}
-     * {@link DBColumnsForm} の　{@link DBColumnsForm#getColumns()} に値を格納する処理
-     *
-     * @param form
-     * @param headerMap
-     */
-    private void createDBColumnsForm(DBColumnsForm form, Map<Integer, String> headerMap) {
-        headerMap.entrySet().stream().map(entry -> DBColumn.of(entry.getValue(), entry.getKey())).forEach(form::addColumns);
-    }
-
-    /**
-     * マルチパートファイルの格納されているフィル名の拡張しを取得する
-     * @param file multipartFile
-     * @return file名の拡張子
-     */
-    private String getFileExtension(MultipartFile file){
-        String fileName = file.getOriginalFilename();
-        int dotIndex = fileName.lastIndexOf(".");
-        return fileName.substring(dotIndex + 1);
-    }
-
-    /**
-     * マルチパートファイルの格納されているフィル名の拡張しを取得する
-     * @param fileName ファイル名
-     * @return file名の拡張子
-     */
-    private String getFileExtension(String fileName){
-        int dotIndex = fileName.lastIndexOf(".");
-        return fileName.substring(dotIndex + 1);
     }
 
 //    @GetMapping("happen")
