@@ -513,6 +513,22 @@ body{
     width: 100%;
 }
 
+.btn-fill.btn-home{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.icon-el{
+    margin-right: 5px;
+    font-size: 18px;
+}
+
+.home-submit {
+    display: flex;
+    justify-content: center;
+}
+
 @keyframes kf-wait-animation {
     0%, 100%{
         transform: translateY(0);

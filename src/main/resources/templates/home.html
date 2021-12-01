@@ -16,6 +16,9 @@
         th:href="@{/styles/bender/bootstrap-reboot.css}">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&family=Roboto:wght@400;700&display=swap"
         rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp"
+        rel="stylesheet">
 
     <link rel="stylesheet" href="../static/styles/header/header.css" th:href="@{/styles/header/header.css}">
     <link rel="stylesheet" href="../static/styles/home/home.css" th:href="@{/styles/home/home.css}">
@@ -60,7 +63,8 @@
                             </div>
                             <div class="description">
                                 <p class="main__top__description">このサイトはDBのInsert文を作成するサイトです。</p>
-                                <p class="main__top__description">Excelファイル・CSVファイルからデータを読み込み、カスタマイズして.sql形式のファイルとしてダウンロードできます。
+                                <p class="main__top__description">
+                                    Excelファイル・CSVファイルからデータを読み込み、カスタマイズして.sql形式のファイルとしてダウンロードできます。
                                 </p>
                                 <p class="main__top__description">↓からご利用できます。お気軽にお使いください。</p>
                             </div>
@@ -85,11 +89,17 @@
                                         ※ヘッダーの値が読み取れないか、あるいはデータが情報が不足しています。ファイルを確認してください。</div>
 
                                     <label for="uploadFile" class="file-label">添付ファイル：</label>
-                                    <input class="form__upload" type="file" id="uploadFile" th:field="*{multipartFile}" name="multipartFile">
+                                    <input class="form__upload" type="file" id="uploadFile" th:field="*{multipartFile}"
+                                        name="multipartFile">
                                     <br>
 
-                                    <div class="form__submit">
-                                        <input class="form__btn btn-fill" type="submit" value="送信">
+                                    <div class="form__submit home-submit">
+                                        <button type="submit" class="form__btn btn-fill btn-home">
+                                            <span class="material-icons-outlined icon-el">
+                                                description
+                                                </span>
+                                            送信
+                                        </button>
                                     </div>
                                 </form>
                             </div>
@@ -107,7 +117,8 @@
                                     サンプルデータダウンロード↓
                                 </div>
                                 <div class="sample">
-                                    <a href="#" th:href="@{/getSample?filename=employee&extension=xlsx}">employee.xlsx</a>
+                                    <a href="#"
+                                        th:href="@{/getSample?filename=employee&extension=xlsx}">employee.xlsx</a>
                                 </div>
                                 <div class="sample">
                                     <a href="#" th:href="@{/getSample?filename=employee&extension=csv}">employee.csv</a>
@@ -218,7 +229,7 @@
                                         <div class="item-content-p">
                                             <h4 class="h4">カラム名の設定について</h4>
                                             <p class="p-btm">
-                                                カラム名は省略可能です。省略した場合はindex番号に出力されている名前が設定されます。
+                                                カラム名は省略可能です。省略した場合はindex番号に出力されている名前(読み取られたヘッダーの値)が設定されます。
                                             </p>
                                             <p class="p-btm">
                                                 画像のように本来ヘッダーにidというカラム名が設定されている所にemployee_idとする事で、
@@ -226,7 +237,7 @@
                                             </p>
                                             <h4 class="h4">列の選択について</h4>
                                             <p class="p-btm">
-                                                この列が必要ない場合は除外を選択することで、Insert文から除外できます。
+                                                この列が必要ない場合は左側のチェックボックスを外す事で、Insert文から除外できます。
                                             </p>
                                             <h4 class="h4">値について</h4>
                                             <p class="p-btm">

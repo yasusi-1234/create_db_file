@@ -15,3 +15,23 @@
         color: $cWhite;
     }
 }
+
+.btn-fill.btn-success {
+    border-color: #26c526;
+    color: #26c526;
+
+    &:hover{
+        background-color: #26c526;
+        color: #cdf7cd;
+    }
+}
+
+.btn-fill.btn-done {
+    border-color: #2929c3;
+    color: #2929c3;
+
+    &:hover{
+        background-color: #9494eb;
+        color: blue;
+    }
+}
