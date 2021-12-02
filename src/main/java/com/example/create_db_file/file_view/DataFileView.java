@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.MediaType;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
 import org.springframework.util.StringUtils;
@@ -17,7 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
@@ -31,7 +31,7 @@ public class DataFileView extends AbstractView {
     private final ResourceLoader resourceLoader;
 
     /**
-     * {@link DbFileCreateServiceImpl#callMakeInsertSentence(InputStream, DBColumnsForm)}
+     * {@link DbFileCreateServiceImpl#makeInsertSentence(String, DBColumnsForm)}
      * より作成されたInsert文を{@link  DBColumnsForm#getFileName()}で指定されたfile名 + .sql形式のファイルとして
      * もし指定が無ければsample.sqlとして作成しダウンロードする
      * @param model コントローラークラス {@link DbFileCreateController} から渡されたModelオブジェクト
@@ -39,7 +39,7 @@ public class DataFileView extends AbstractView {
      * @param response {@link HttpServletResponse}
      */
     @Override
-    protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void renderMergedOutputModel(Map<String, Object> model, @NonNull HttpServletRequest request, @NonNull HttpServletResponse response) throws IOException {
         // dbのinsert文
         String insertSentence = (String) model.get("insertSentence");
 
@@ -52,9 +52,9 @@ public class DataFileView extends AbstractView {
         }
     }
 
-    private void renderInsertFile(Map<String, Object> model, String insertSentence, HttpServletResponse response) throws IOException{
+    private void renderInsertFile(Map<String, Object> model, String insertSentence, @NonNull HttpServletResponse response) throws IOException{
         DBColumnsForm form = (DBColumnsForm) model.get("dBColumnsForm");
-        String fileName = null;
+        String fileName;
 
         if (form == null){
             CreateFromZeroForm createFromZeroForm = (CreateFromZeroForm) model.get("createFromZeroForm");
@@ -76,14 +76,12 @@ public class DataFileView extends AbstractView {
         if(!resource.exists()){
             resource = resourceLoader.getResource("classpath:sample_data/" + "employee.xlsx");
             response.setHeader("Content-Disposition", "attachment; filename=" + "employee.xlsx");
-            response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
-            StreamUtils.copy(resource.getInputStream(), response.getOutputStream());
         }else{
             response.setHeader("Content-Disposition", "attachment; filename=" + filename + "." + extension);
-            response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
 
-            StreamUtils.copy(resource.getInputStream(), response.getOutputStream());
         }
+        response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+        StreamUtils.copy(resource.getInputStream(), response.getOutputStream());
 
     }
 

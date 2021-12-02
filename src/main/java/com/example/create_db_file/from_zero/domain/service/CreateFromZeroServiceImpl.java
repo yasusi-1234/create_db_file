@@ -43,12 +43,10 @@ public class CreateFromZeroServiceImpl implements CreateFromZeroService {
      * List<List<String>>型のデータを受け取り、DummyUser形にそれぞれ変換しデータベースに登録する
      *
      * @param requestUsers ユーザー情報が格納されたデータ
-     * @return 登録されたDummyUserのリスト
      */
     @Transactional(readOnly = false, rollbackFor = Exception.class)
     @Override
     public void createDummyUsersByLists(List<List<String>> requestUsers) {
-        Random rand = new Random();
 
         List<DummyUserFirstName> firstNames = new ArrayList<>();
         List<DummyUserLastName> lastNames = new ArrayList<>();
@@ -368,7 +366,7 @@ public class CreateFromZeroServiceImpl implements CreateFromZeroService {
 
         for (int i = 0; i < createSize; i++) {
             long longDate = ThreadLocalRandom.current().nextLong(lsld, leld);
-            int intTime = 0;
+            int intTime;
 
             if(longDate == lsld){
                 intTime = ThreadLocalRandom.current().nextInt(islt, LocalTime.MAX.toSecondOfDay());

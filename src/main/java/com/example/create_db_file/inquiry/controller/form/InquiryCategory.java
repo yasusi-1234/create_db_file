@@ -6,9 +6,9 @@ public enum InquiryCategory {
 
     Bug(1, "バグ"), Request(2, "リクエスト"), Others(3, "その他");
     @Getter
-    private String viewName;
+    private final String viewName;
     @Getter
-    private int index;
+    private final int index;
 
     InquiryCategory(int index, String viewName) {
         this.index = index;

@@ -5,20 +5,17 @@ import com.example.create_db_file.from_file.controller.form.DBColumnsForm;
 import com.example.create_db_file.from_file.domain.file_helper.FileInformationHelper;
 import com.example.create_db_file.from_file.domain.file_helper.ExcelInformationHelper;
 import com.example.create_db_file.utils.CommonUtils;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.FileUrlResource;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -35,16 +32,12 @@ public class DbFileCreateServiceImpl implements DbFileCreateService{
 
     private final FileInformationHelper csvHelper;
 
-    private final ResourceLoader resourceLoader;
-
     @Autowired
     public DbFileCreateServiceImpl(
             @Qualifier("excelInformationHelper") FileInformationHelper excelHelper,
-            @Qualifier("csvInformationHelper") FileInformationHelper csvHelper,
-            ResourceLoader resourceLoader) {
+            @Qualifier("csvInformationHelper") FileInformationHelper csvHelper) {
         this.excelHelper = excelHelper;
         this.csvHelper = csvHelper;
-        this.resourceLoader = resourceLoader;
     }
 
     /**
@@ -83,10 +76,9 @@ public class DbFileCreateServiceImpl implements DbFileCreateService{
         // ファイルの拡張子
         String extension = getFileExtension(filePath);
 
-        Resource fileResource = null;
         Map<Integer, String> headerMap = new HashMap<>();
         try {
-            fileResource = new FileUrlResource(filePath);
+            Resource fileResource = new FileUrlResource(filePath);
 
             String simpleFileName = CommonUtils.getResourceSimpleFileName(fileResource);
 
@@ -195,8 +187,8 @@ public class DbFileCreateServiceImpl implements DbFileCreateService{
      * DBColumnオブジェクトをそれぞれ生成し {@link DBColumn}
      * {@link DBColumnsForm} の　{@link DBColumnsForm#getColumns()} に値を格納する処理
      *
-     * @param form
-     * @param headerMap
+     * @param form {@link DBColumnsForm}
+     * @param headerMap ヘッダー情報のマップ
      */
     private void createDBColumnsForm(DBColumnsForm form, Map<Integer, String> headerMap) {
         headerMap.entrySet().stream().map(entry -> DBColumn.of(entry.getValue(), entry.getKey())).forEach(form::addColumns);

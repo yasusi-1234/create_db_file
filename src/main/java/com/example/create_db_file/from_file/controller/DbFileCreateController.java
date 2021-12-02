@@ -5,11 +5,8 @@ import com.example.create_db_file.from_file.controller.form.DBColumnsForm;
 import com.example.create_db_file.from_file.controller.form.OriginalDataFileForm;
 import com.example.create_db_file.session.UserSession;
 import com.example.create_db_file.from_file.domain.service.DbFileCreateService;
-import com.example.create_db_file.utils.CommonUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.FileUrlResource;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
@@ -18,17 +15,14 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -182,10 +176,5 @@ public class DbFileCreateController {
                 .withMappingName("DFCC#getHome").encode().build();
         return "redirect:" + redirectPath;
     }
-
-//    @GetMapping("happen")
-//    public String happen(){
-//        throw new IllegalArgumentException("error occur");
-//    }
 
 }

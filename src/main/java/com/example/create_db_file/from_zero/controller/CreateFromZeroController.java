@@ -51,11 +51,6 @@ public class CreateFromZeroController {
         model.addAttribute("timeTypes", TimeType.values());
         model.addAttribute("stringTypes", StringType.values());
 
-//        if(form.getFirstNameForms().isEmpty()){
-//            form.addFirstNameForms();
-//            form.addLastNameForms();
-//        }
-
         return "create_and_custom";
     }
 

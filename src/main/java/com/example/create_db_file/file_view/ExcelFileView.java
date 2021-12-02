@@ -4,6 +4,7 @@ import com.example.create_db_file.from_zero.controller.form.CreateFromZeroForm;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.view.document.AbstractXlsxView;
 
@@ -15,7 +16,7 @@ import java.util.Map;
 @Component("excelFileView")
 public class ExcelFileView extends AbstractXlsxView {
     @Override
-    protected void buildExcelDocument(Map<String, Object> model, Workbook workbook, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    protected void buildExcelDocument(Map<String, Object> model, Workbook workbook, @NonNull HttpServletRequest request, @NonNull HttpServletResponse response){
 
         List<List<String>> excelData = (List<List<String>>) model.get("excelData");
         CreateFromZeroForm form = (CreateFromZeroForm) model.get("createFromZeroForm");
