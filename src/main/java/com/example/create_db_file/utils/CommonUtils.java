@@ -8,7 +8,7 @@ import java.nio.file.Paths;
 public class CommonUtils {
 
     public static String getResourceSimpleFileName(Resource resource){
-        String fileName = null;
+        String fileName;
         try {
             fileName = Paths.get(resource.getFile().getPath()).getFileName().toString();
             int firstIndex = fileName.indexOf("_");

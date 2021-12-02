@@ -1,12 +1,17 @@
 package com.example.create_db_file.inquiry.domain.model;
 
-import lombok.Data;
+import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Entity
 public class Inquiry implements Serializable {
 
@@ -30,5 +35,18 @@ public class Inquiry implements Serializable {
         inquiry.setSendDateTime(sendDateTime);
         inquiry.setInquiryCategory(inquiryCategory);
         return inquiry;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Inquiry inquiry = (Inquiry) o;
+        return inquiryId != null && Objects.equals(inquiryId, inquiry.inquiryId);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

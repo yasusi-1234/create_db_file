@@ -17,7 +17,7 @@ public class DBColumnsValidator implements ConstraintValidator<DBColumns, List<D
      * カラム情報の {@link DBColumn} に一つ以上の include {@code true} がある場合は正常値を
      * 返却、問題がある場合は {@code false} を返却
      * @param value カラムのリスト情報 {@link DBColumnsForm} {@link DBColumn}
-     * @param context
+     * @param context {@link ConstraintValidatorContext}
      * @return 異常な値 {@code false} 問題無し {@code true}
      */
     @Override

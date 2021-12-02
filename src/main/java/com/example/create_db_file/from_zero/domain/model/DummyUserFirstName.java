@@ -1,13 +1,18 @@
 package com.example.create_db_file.from_zero.domain.model;
 
-import lombok.Data;
+import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.util.Objects;
 
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Entity
 public class DummyUserFirstName {
 
@@ -30,5 +35,18 @@ public class DummyUserFirstName {
         dummyUserFirstName.setFirstNameKana(firstNameKana);
         dummyUserFirstName.setFirstNameRoman(firstNameRoman);
         return dummyUserFirstName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        DummyUserFirstName that = (DummyUserFirstName) o;
+        return userFirstNameId != null && Objects.equals(userFirstNameId, that.userFirstNameId);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

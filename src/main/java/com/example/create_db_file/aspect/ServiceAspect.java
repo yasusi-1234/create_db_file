@@ -16,7 +16,6 @@ public class ServiceAspect {
 
     @Before("execution(* *..*.DbFileCreateService.*(..))")
     public void beforeDbFileCreateService(JoinPoint joinPoint){
-//        log.info("{}", joinPoint.getSignature());
     }
 
     @AfterThrowing(pointcut = "execution(* *..*.DbFileCreateService.*(..))", throwing = "ex")
@@ -28,7 +27,6 @@ public class ServiceAspect {
 
     @Before("execution(* *..*.ExcelInformationReader.*(..))")
     public void before(JoinPoint joinPoint){
-//        log.info("{}", joinPoint.getSignature());
     }
 
     @AfterThrowing(pointcut = "execution(* *..*.ExcelInformationReader.*(..))", throwing = "ex")

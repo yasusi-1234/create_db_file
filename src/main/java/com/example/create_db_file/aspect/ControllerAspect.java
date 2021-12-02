@@ -16,7 +16,6 @@ public class ControllerAspect {
 
     @Before("execution(* *..*.*Controller.*(..))")
     public void before(JoinPoint joinPoint){
-//        log.info("{}", joinPoint.getSignature());
     }
 
     @AfterThrowing(pointcut = "execution(* *..*.*Controller.*(..))", throwing = "ex")
