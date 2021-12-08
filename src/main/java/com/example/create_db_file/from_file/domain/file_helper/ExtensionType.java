@@ -1,5 +1,7 @@
 package com.example.create_db_file.from_file.domain.file_helper;
 
+import org.springframework.lang.NonNull;
+
 /**
  * ファイルの拡張子別のタイプを表すenumクラス
  */
@@ -12,7 +14,7 @@ public enum ExtensionType {
      * @param fileName 拡張子付きのファイル名
      * @return 引数で受け取ったファイル名にマッチした {@link ExtensionType}
      */
-    public static ExtensionType getExtensionType(String fileName){
+    public static ExtensionType getExtensionType(@NonNull String fileName){
         int dotIndex = fileName.lastIndexOf(".");
         if(dotIndex == -1){
             return Other;
@@ -28,7 +30,7 @@ public enum ExtensionType {
      * @param extension ファイルの拡張子
      * @return 引数で受け取った文字列にマッチした {@link ExtensionType}
      */
-    public static ExtensionType getExtensionTypeFromExtension(String extension){
+    public static ExtensionType getExtensionTypeFromExtension(@NonNull String extension){
         switch (extension){
             case "xlsx":
             case "xls":
