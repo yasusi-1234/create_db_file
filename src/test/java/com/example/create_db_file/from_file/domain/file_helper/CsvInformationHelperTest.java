@@ -24,22 +24,22 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(classes = { ExcelInformationHelper.class })
-@DisplayName("ExcelInformationHelperTestクラスのテスト")
-class ExcelInformationHelperTest {
+@SpringBootTest(classes = { CsvInformationHelper.class })
+@DisplayName("CsvInformationHelperクラスのテスト")
+class CsvInformationHelperTest {
 
     @Autowired
     private ResourceLoader resourceLoader;
 
     @Autowired
-    @Qualifier("excelInformationHelper")
-    private FileInformationHelper excelInformationHelper;
+    @Qualifier("csvInformationHelper")
+    private FileInformationHelper csvInformationHelper;
 
-    @DisplayName("analyzeHeaderメソッドはExcelのInputStream情報からヘッダーの値を抜き出し、Mapオブジェクトとして返却する")
+    @DisplayName("analyzeHeaderメソッドはCsvファイルのInputStream情報からヘッダーの値を抜き出し、Mapオブジェクトとして返却する")
     @Test
     void analyzeHeader() throws Exception{
-        Resource resource = resourceLoader.getResource("classpath:excel/employee.xlsx");
-        Map<Integer, String> actual = excelInformationHelper.analyzeHeader(resource.getInputStream());
+        Resource resource = resourceLoader.getResource("classpath:csv/employee.csv");
+        Map<Integer, String> actual = csvInformationHelper.analyzeHeader(resource.getInputStream());
 
         Map<Integer, String> expected = new HashMap<>(){{
             put(0, "id");
@@ -51,8 +51,8 @@ class ExcelInformationHelperTest {
 
         assertEquals(actual, expected);
 
-        Resource inEmptyResource = resourceLoader.getResource("classpath:excel/in-empty-employee.xlsx");
-        Map<Integer, String> inEmptyActual = excelInformationHelper.analyzeHeader(inEmptyResource.getInputStream());
+        Resource inEmptyResource = resourceLoader.getResource("classpath:csv/in-empty-employee2.csv");
+        Map<Integer, String> inEmptyActual = csvInformationHelper.analyzeHeader(inEmptyResource.getInputStream());
 
         assertEquals(inEmptyActual, expected);
     }
@@ -60,25 +60,25 @@ class ExcelInformationHelperTest {
     @DisplayName("analyzeHeaderメソッドはファイルがヘッダーのみか何もデータが無い場合は空のMapを返却する")
     @Test
     void analyzeHeaderFromNoDataOrHeaderDataOnly() throws Exception{
-        Resource resourceNoData = resourceLoader.getResource("classpath:excel/nodeta.xlsx");
-        Map<Integer, String> noDataActual = excelInformationHelper.analyzeHeader(resourceNoData.getInputStream());
-        System.out.println(noDataActual);
+        // ヘッダーもデータも空のCsvリソース
+        Resource resourceNoData = resourceLoader.getResource("classpath:csv/allnodata.csv");
+        Map<Integer, String> noDataActual = csvInformationHelper.analyzeHeader(resourceNoData.getInputStream());
         assertTrue(noDataActual.isEmpty());
 
-        Resource resourceHeaderOnly = resourceLoader.getResource("classpath:excel/allnodata.xlsx");
+        // ヘッダー情報のみ記載されたリソース
+        Resource resourceHeaderOnly = resourceLoader.getResource("classpath:csv/nodata.csv");
 
-        Map<Integer, String> headerOnlyActual = excelInformationHelper.analyzeHeader(resourceHeaderOnly.getInputStream());
-        System.out.println(headerOnlyActual);
+        Map<Integer, String> headerOnlyActual = csvInformationHelper.analyzeHeader(resourceHeaderOnly.getInputStream());
         assertTrue(headerOnlyActual.isEmpty());
     }
 
-    @DisplayName("saveFileメソッドはexcelのInputStream情報を指定したPathに保存する")
+    @DisplayName("saveFileメソッドはcsvのInputStream情報を指定したPathに保存する")
     @Test
     void saveFile(@TempDir Path tempDir) throws Exception{
-        Resource resource = resourceLoader.getResource("classpath:excel/employee.xlsx");
+        Resource resource = resourceLoader.getResource("classpath:csv/employee.csv");
 
-        Path savePath = Paths.get(tempDir.toString(), "sample.xlsx");
-        excelInformationHelper.saveFile(resource.getInputStream(), savePath.toString());
+        Path savePath = Paths.get(tempDir.toString(), "sample.csv");
+        csvInformationHelper.saveFile(resource.getInputStream(), savePath.toString());
 
         assertTrue(Files.exists(savePath));
     }
@@ -91,9 +91,9 @@ class ExcelInformationHelperTest {
         @DisplayName("makeInsertSentenceメソッドは期待された量のInsert文を生成する")
         void makeInsertSentenceOfCount() throws Exception{
             DBColumnsForm form = testDbColumnsForm();
-            Resource resource = resourceLoader.getResource("classpath:excel/employee.xlsx");
+            Resource resource = resourceLoader.getResource("classpath:csv/employee.csv");
 
-            String actual = excelInformationHelper.makeInsertSentence(resource.getInputStream(), form);
+            String actual = csvInformationHelper.makeInsertSentence(resource.getInputStream(), form);
             int actualCount = sentenceDataList(actual).size();
 
             assertEquals(10, actualCount);
@@ -103,9 +103,9 @@ class ExcelInformationHelperTest {
         @DisplayName("makeInsertSentenceメソッドは期待されたInsert文の右側の文字列を正しく生成する")
         void makeInsertSentenceOfOneLine1() throws Exception{
             DBColumnsForm form = testDbColumnsForm();
-            Resource resource = resourceLoader.getResource("classpath:excel/employee.xlsx");
+            Resource resource = resourceLoader.getResource("classpath:csv/employee.csv");
 
-            String actual = excelInformationHelper.makeInsertSentence(resource.getInputStream(), form);
+            String actual = csvInformationHelper.makeInsertSentence(resource.getInputStream(), form);
             List<String> sentences = cutRightDataList(actual);
 
             String sentenceOfFirstLine = sentences.get(0);
@@ -125,9 +125,9 @@ class ExcelInformationHelperTest {
             // ageをNULLに変換
             form.getColumns().get(3).setType(DBColumn.ColumnType.NULL);
 
-            Resource resource = resourceLoader.getResource("classpath:excel/employee.xlsx");
+            Resource resource = resourceLoader.getResource("classpath:csv/employee.csv");
 
-            String actual = excelInformationHelper.makeInsertSentence(resource.getInputStream(), form);
+            String actual = csvInformationHelper.makeInsertSentence(resource.getInputStream(), form);
             List<String> sentences = cutRightDataList(actual);
 
             String sentenceOfFirstLine = sentences.get(0);
@@ -139,11 +139,11 @@ class ExcelInformationHelperTest {
         @Test
         @DisplayName("makeInsertTemplateLeftメソッドはフォーム情報を元にInsert文の左側の文字列を正しく生成する")
         void makeInsertTemplateLeft1() throws Exception {
-            Method method = excelInformationHelper.getClass()
+            Method method = csvInformationHelper.getClass()
                     .getDeclaredMethod("makeInsertTemplateLeft", DBColumnsForm.class);
             method.setAccessible(true);
 
-            String actual = (String) method.invoke(excelInformationHelper, testDbColumnsForm());
+            String actual = (String) method.invoke(csvInformationHelper, testDbColumnsForm());
 
             String expected = "INSERT INTO sample (id, first_name, last_name, age, department) VALUES(";
             assertEquals(expected, actual);
@@ -152,7 +152,7 @@ class ExcelInformationHelperTest {
         @Test
         @DisplayName("makeInsertTemplateLeftメソッドはフォーム情報に代替のカラム名が含まれる場合正しく入れ替えて出力する")
         void makeInsertTemplateLeft2() throws Exception {
-            Method method = excelInformationHelper.getClass()
+            Method method = csvInformationHelper.getClass()
                     .getDeclaredMethod("makeInsertTemplateLeft", DBColumnsForm.class);
             method.setAccessible(true);
 
@@ -160,7 +160,7 @@ class ExcelInformationHelperTest {
             form.getColumns().get(0).setChangeColumnName("employee_id");
             form.getColumns().get(4).setChangeColumnName("department_name");
 
-            String actual = (String) method.invoke(excelInformationHelper, form);
+            String actual = (String) method.invoke(csvInformationHelper, form);
 
             String expected = "INSERT INTO sample (employee_id, first_name, last_name, age, department_name) VALUES(";
             assertEquals(expected, actual);
@@ -169,7 +169,7 @@ class ExcelInformationHelperTest {
         @Test
         @DisplayName("makeInsertTemplateLeftメソッドはフォーム情報に除外が含まれる場合正しく除外して出力する")
         void makeInsertTemplateLeft3() throws Exception {
-            Method method = excelInformationHelper.getClass()
+            Method method = csvInformationHelper.getClass()
                     .getDeclaredMethod("makeInsertTemplateLeft", DBColumnsForm.class);
             method.setAccessible(true);
 
@@ -177,7 +177,7 @@ class ExcelInformationHelperTest {
             form.getColumns().get(0).setInclude(false);
             form.getColumns().get(3).setInclude(false);
 
-            String actual = (String) method.invoke(excelInformationHelper, form);
+            String actual = (String) method.invoke(csvInformationHelper, form);
 
             String expected = "INSERT INTO sample (first_name, last_name, department) VALUES(";
             assertEquals(expected, actual);
@@ -239,5 +239,4 @@ class ExcelInformationHelperTest {
         }
 
     }
-
 }
