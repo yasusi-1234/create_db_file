@@ -2,15 +2,13 @@ package com.example.create_db_file.from_file.domain.file_helper;
 
 import com.example.create_db_file.from_file.controller.form.DBColumn;
 import com.example.create_db_file.from_file.controller.form.DBColumnsForm;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Method;
@@ -24,21 +22,20 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(classes = { ExcelInformationHelper.class })
 @DisplayName("ExcelInformationHelperTestクラスのテスト")
 class ExcelInformationHelperTest {
 
-    @Autowired
-    private ResourceLoader resourceLoader;
-
-    @Autowired
-    @Qualifier("excelInformationHelper")
     private FileInformationHelper excelInformationHelper;
+
+    @BeforeEach
+    void setUp(){
+        excelInformationHelper = new ExcelInformationHelper();
+    }
 
     @DisplayName("analyzeHeaderメソッドはExcelのInputStream情報からヘッダーの値を抜き出し、Mapオブジェクトとして返却する")
     @Test
     void analyzeHeader() throws Exception{
-        Resource resource = resourceLoader.getResource("classpath:excel/employee.xlsx");
+        Resource resource = testResource("excel/employee.xlsx");
         Map<Integer, String> actual = excelInformationHelper.analyzeHeader(resource.getInputStream());
 
         Map<Integer, String> expected = new HashMap<>(){{
@@ -51,7 +48,7 @@ class ExcelInformationHelperTest {
 
         assertEquals(actual, expected);
 
-        Resource inEmptyResource = resourceLoader.getResource("classpath:excel/in-empty-employee.xlsx");
+        Resource inEmptyResource = testResource("excel/in-empty-employee.xlsx");
         Map<Integer, String> inEmptyActual = excelInformationHelper.analyzeHeader(inEmptyResource.getInputStream());
 
         assertEquals(inEmptyActual, expected);
@@ -60,12 +57,12 @@ class ExcelInformationHelperTest {
     @DisplayName("analyzeHeaderメソッドはファイルがヘッダーのみか何もデータが無い場合は空のMapを返却する")
     @Test
     void analyzeHeaderFromNoDataOrHeaderDataOnly() throws Exception{
-        Resource resourceNoData = resourceLoader.getResource("classpath:excel/nodeta.xlsx");
+        Resource resourceNoData = testResource("excel/nodeta.xlsx");
         Map<Integer, String> noDataActual = excelInformationHelper.analyzeHeader(resourceNoData.getInputStream());
         System.out.println(noDataActual);
         assertTrue(noDataActual.isEmpty());
 
-        Resource resourceHeaderOnly = resourceLoader.getResource("classpath:excel/allnodata.xlsx");
+        Resource resourceHeaderOnly = testResource("excel/allnodata.xlsx");
 
         Map<Integer, String> headerOnlyActual = excelInformationHelper.analyzeHeader(resourceHeaderOnly.getInputStream());
         System.out.println(headerOnlyActual);
@@ -75,7 +72,7 @@ class ExcelInformationHelperTest {
     @DisplayName("saveFileメソッドはexcelのInputStream情報を指定したPathに保存する")
     @Test
     void saveFile(@TempDir Path tempDir) throws Exception{
-        Resource resource = resourceLoader.getResource("classpath:excel/employee.xlsx");
+        Resource resource = testResource("excel/employee.xlsx");
 
         Path savePath = Paths.get(tempDir.toString(), "sample.xlsx");
         excelInformationHelper.saveFile(resource.getInputStream(), savePath.toString());
@@ -91,7 +88,7 @@ class ExcelInformationHelperTest {
         @DisplayName("makeInsertSentenceメソッドは期待された量のInsert文を生成する")
         void makeInsertSentenceOfCount() throws Exception{
             DBColumnsForm form = testDbColumnsForm();
-            Resource resource = resourceLoader.getResource("classpath:excel/employee.xlsx");
+            Resource resource = testResource("excel/employee.xlsx");
 
             String actual = excelInformationHelper.makeInsertSentence(resource.getInputStream(), form);
             int actualCount = sentenceDataList(actual).size();
@@ -103,7 +100,7 @@ class ExcelInformationHelperTest {
         @DisplayName("makeInsertSentenceメソッドは期待されたInsert文の右側の文字列を正しく生成する")
         void makeInsertSentenceOfOneLine1() throws Exception{
             DBColumnsForm form = testDbColumnsForm();
-            Resource resource = resourceLoader.getResource("classpath:excel/employee.xlsx");
+            Resource resource = testResource("excel/employee.xlsx");
 
             String actual = excelInformationHelper.makeInsertSentence(resource.getInputStream(), form);
             List<String> sentences = cutRightDataList(actual);
@@ -125,7 +122,7 @@ class ExcelInformationHelperTest {
             // ageをNULLに変換
             form.getColumns().get(3).setType(DBColumn.ColumnType.NULL);
 
-            Resource resource = resourceLoader.getResource("classpath:excel/employee.xlsx");
+            Resource resource = testResource("excel/employee.xlsx");
 
             String actual = excelInformationHelper.makeInsertSentence(resource.getInputStream(), form);
             List<String> sentences = cutRightDataList(actual);
@@ -238,6 +235,10 @@ class ExcelInformationHelperTest {
             return sentence.substring(start + 1 , end + 2);
         }
 
+
     }
 
+    private static Resource testResource(String filePath){
+        return new ClassPathResource(filePath);
+    }
 }
