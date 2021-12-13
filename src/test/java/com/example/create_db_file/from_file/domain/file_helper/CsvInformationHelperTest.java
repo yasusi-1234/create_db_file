@@ -2,15 +2,13 @@ package com.example.create_db_file.from_file.domain.file_helper;
 
 import com.example.create_db_file.from_file.controller.form.DBColumn;
 import com.example.create_db_file.from_file.controller.form.DBColumnsForm;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Method;
@@ -24,21 +22,20 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(classes = { CsvInformationHelper.class })
 @DisplayName("CsvInformationHelperクラスのテスト")
 class CsvInformationHelperTest {
 
-    @Autowired
-    private ResourceLoader resourceLoader;
-
-    @Autowired
-    @Qualifier("csvInformationHelper")
     private FileInformationHelper csvInformationHelper;
+    
+    @BeforeEach
+    void setUp(){
+        csvInformationHelper = new CsvInformationHelper();
+    }
 
     @DisplayName("analyzeHeaderメソッドはCsvファイルのInputStream情報からヘッダーの値を抜き出し、Mapオブジェクトとして返却する")
     @Test
     void analyzeHeader() throws Exception{
-        Resource resource = resourceLoader.getResource("classpath:csv/employee.csv");
+        Resource resource = testResource("csv/employee.csv");
         Map<Integer, String> actual = csvInformationHelper.analyzeHeader(resource.getInputStream());
 
         Map<Integer, String> expected = new HashMap<>(){{
@@ -51,7 +48,7 @@ class CsvInformationHelperTest {
 
         assertEquals(actual, expected);
 
-        Resource inEmptyResource = resourceLoader.getResource("classpath:csv/in-empty-employee2.csv");
+        Resource inEmptyResource = testResource("csv/in-empty-employee2.csv");
         Map<Integer, String> inEmptyActual = csvInformationHelper.analyzeHeader(inEmptyResource.getInputStream());
 
         assertEquals(inEmptyActual, expected);
@@ -61,12 +58,12 @@ class CsvInformationHelperTest {
     @Test
     void analyzeHeaderFromNoDataOrHeaderDataOnly() throws Exception{
         // ヘッダーもデータも空のCsvリソース
-        Resource resourceNoData = resourceLoader.getResource("classpath:csv/allnodata.csv");
+        Resource resourceNoData = testResource("csv/allnodata.csv");
         Map<Integer, String> noDataActual = csvInformationHelper.analyzeHeader(resourceNoData.getInputStream());
         assertTrue(noDataActual.isEmpty());
 
         // ヘッダー情報のみ記載されたリソース
-        Resource resourceHeaderOnly = resourceLoader.getResource("classpath:csv/nodata.csv");
+        Resource resourceHeaderOnly = testResource("csv/nodata.csv");
 
         Map<Integer, String> headerOnlyActual = csvInformationHelper.analyzeHeader(resourceHeaderOnly.getInputStream());
         assertTrue(headerOnlyActual.isEmpty());
@@ -75,7 +72,7 @@ class CsvInformationHelperTest {
     @DisplayName("saveFileメソッドはcsvのInputStream情報を指定したPathに保存する")
     @Test
     void saveFile(@TempDir Path tempDir) throws Exception{
-        Resource resource = resourceLoader.getResource("classpath:csv/employee.csv");
+        Resource resource = testResource("csv/employee.csv");
 
         Path savePath = Paths.get(tempDir.toString(), "sample.csv");
         csvInformationHelper.saveFile(resource.getInputStream(), savePath.toString());
@@ -91,7 +88,7 @@ class CsvInformationHelperTest {
         @DisplayName("makeInsertSentenceメソッドは期待された量のInsert文を生成する")
         void makeInsertSentenceOfCount() throws Exception{
             DBColumnsForm form = testDbColumnsForm();
-            Resource resource = resourceLoader.getResource("classpath:csv/employee.csv");
+            Resource resource = testResource("csv/employee.csv");
 
             String actual = csvInformationHelper.makeInsertSentence(resource.getInputStream(), form);
             int actualCount = sentenceDataList(actual).size();
@@ -103,7 +100,7 @@ class CsvInformationHelperTest {
         @DisplayName("makeInsertSentenceメソッドは期待されたInsert文の右側の文字列を正しく生成する")
         void makeInsertSentenceOfOneLine1() throws Exception{
             DBColumnsForm form = testDbColumnsForm();
-            Resource resource = resourceLoader.getResource("classpath:csv/employee.csv");
+            Resource resource = testResource("csv/employee.csv");
 
             String actual = csvInformationHelper.makeInsertSentence(resource.getInputStream(), form);
             List<String> sentences = cutRightDataList(actual);
@@ -125,7 +122,7 @@ class CsvInformationHelperTest {
             // ageをNULLに変換
             form.getColumns().get(3).setType(DBColumn.ColumnType.NULL);
 
-            Resource resource = resourceLoader.getResource("classpath:csv/employee.csv");
+            Resource resource = testResource("csv/employee.csv");
 
             String actual = csvInformationHelper.makeInsertSentence(resource.getInputStream(), form);
             List<String> sentences = cutRightDataList(actual);
@@ -238,5 +235,9 @@ class CsvInformationHelperTest {
             return sentence.substring(start + 1 , end + 2);
         }
 
+    }
+
+    private static Resource testResource(String filePath){
+        return new ClassPathResource(filePath);
     }
 }
