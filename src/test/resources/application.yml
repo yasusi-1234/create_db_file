@@ -1,0 +1,36 @@
+logging:
+#  file: logs/insertMaker.log
+#  config: classpath:logback-spring.xml
+  level:
+    root: info
+    org.springframework.web: info
+    org:
+      hibernate:
+        SQL: debug
+        type:
+          descriptor:
+            sql:
+              BasicBinder: debug
+
+
+spring:
+  jpa:
+    # ddl-autoNoneを設定しないとファイルからのデータ読み込みが無視される？
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=1;DB_CLOSE_ON_EXIT=FALSE;MODE=DB2
+    username: sa
+    password:
+  sql:
+    init:
+      enabled: true
+      schema-locations: classpath:schema.sql
+      data-locations: classpath:data.sql
+
+
+
