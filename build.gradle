@@ -31,7 +31,6 @@ dependencies {
 	// security
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
-//	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
 
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
@@ -48,6 +47,8 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+
+	testImplementation 'com.h2database:h2'
 }
 
 test {
