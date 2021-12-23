@@ -2,16 +2,16 @@ package com.example.create_db_file.from_file.domain.service;
 
 import com.example.create_db_file.from_file.controller.form.DBColumn;
 import com.example.create_db_file.from_file.controller.form.DBColumnsForm;
-import com.example.create_db_file.from_file.domain.file_helper.ExtensionType;
+import com.example.create_db_file.from_file.domain.file_helper.FileHelperFactory;
 import com.example.create_db_file.from_file.domain.file_helper.FileInformationHelper;
 import com.example.create_db_file.from_file.domain.file_helper.ExcelInformationHelper;
 import com.example.create_db_file.utils.CommonUtils;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.FileUrlResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -24,21 +24,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
+@RequiredArgsConstructor
 @Slf4j
 @Service
 public class DbFileCreateServiceImpl implements DbFileCreateService {
 
-    private final FileInformationHelper excelHelper;
-
-    private final FileInformationHelper csvHelper;
-
-    @Autowired
-    public DbFileCreateServiceImpl(
-            @Qualifier("excelInformationHelper") FileInformationHelper excelHelper,
-            @Qualifier("csvInformationHelper") FileInformationHelper csvHelper) {
-        this.excelHelper = excelHelper;
-        this.csvHelper = csvHelper;
-    }
+    private final FileHelperFactory fileHelperFactory;
 
     /**
      * ExcelのHeader情報を、Key:位置情報 Value:ヘッダーの値を Mapに格納して返却するメソッド
@@ -48,19 +39,11 @@ public class DbFileCreateServiceImpl implements DbFileCreateService {
      */
     @Override
     public Map<Integer, String> findHeader(MultipartFile multipartFile) {
-        // ファイルの拡張子
-        ExtensionType extensionType = ExtensionType.getExtensionType(multipartFile.getOriginalFilename());
+        FileInformationHelper fileInformationHelper =
+                fileHelperFactory.createFileInformationHelper(multipartFile.getOriginalFilename());
 
         try (InputStream in = multipartFile.getInputStream()) {
-            switch (extensionType) {
-                case Excel:
-                    return excelHelper.analyzeHeader(in);
-                case Csv:
-                    return csvHelper.analyzeHeader(in);
-                case Other:
-                default:
-                    return new HashMap<>();
-            }
+            return fileInformationHelper.analyzeHeader(in);
         } catch (IOException e) {
             log.warn("DbFileCreateServiceImpl: findHeader: IOException occur ");
             return new HashMap<>();
@@ -82,22 +65,12 @@ public class DbFileCreateServiceImpl implements DbFileCreateService {
         Map<Integer, String> headerMap = new HashMap<>();
         try {
             Resource fileResource = new FileUrlResource(filePath);
-            // ファイルの拡張子
-            ExtensionType extensionType = ExtensionType.getExtensionType(filePath);
+            FileInformationHelper fileInformationHelper =
+                    fileHelperFactory.createFileInformationHelper(filePath);
 
-            switch (extensionType) {
-                case Excel:
-                    headerMap = excelHelper.analyzeHeader(fileResource.getInputStream());
-                    createDBColumnsForm(form, headerMap, fileResource);
-                    return headerMap;
-                case Csv:
-                    headerMap = csvHelper.analyzeHeader(fileResource.getInputStream());
-                    createDBColumnsForm(form, headerMap, fileResource);
-                    return headerMap;
-                case Other:
-                default:
-                    return headerMap;
-            }
+            headerMap = fileInformationHelper.analyzeHeader(fileResource.getInputStream());
+            createDBColumnsForm(form, headerMap, fileResource);
+            return headerMap;
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -120,8 +93,8 @@ public class DbFileCreateServiceImpl implements DbFileCreateService {
         try (InputStream in = multipartFile.getInputStream()) {
 
             File tempFile = new File("/tmp");
-            // ファイルの拡張子
-            ExtensionType extensionType = ExtensionType.getExtensionType(multipartFile.getOriginalFilename());
+            FileInformationHelper fileInformationHelper =
+                    fileHelperFactory.createFileInformationHelper(multipartFile.getOriginalFilename());
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSS");
             String formatDate = LocalDateTime.now().format(formatter);
@@ -130,17 +103,7 @@ public class DbFileCreateServiceImpl implements DbFileCreateService {
             // 一時保存ファイルの保存するパス設定
             Path path = Paths.get(tempFile.getAbsolutePath(), temporalFileName);
 
-            switch (extensionType) {
-                case Excel:
-                    excelHelper.saveFile(in, path.toString());
-                    return path.toString();
-                case Csv:
-                    csvHelper.saveFile(in, path.toString());
-                    return path.toString();
-                case Other:
-                default:
-                    return "";
-            }
+            return fileInformationHelper.saveFile(in, path.toString());
 
         } catch (IOException ex) {
             log.warn("DbFileCreateServiceImpl: fileToSaveTemporarily: IOException occur ");
@@ -160,18 +123,11 @@ public class DbFileCreateServiceImpl implements DbFileCreateService {
     @Override
     public String makeInsertSentence(String filePath, DBColumnsForm form) throws IOException {
         Resource fileResource = new FileUrlResource(filePath);
-        // ファイルの拡張子
-        ExtensionType extensionType = ExtensionType.getExtensionType(filePath);
+        FileInformationHelper fileInformationHelper =
+                fileHelperFactory.createFileInformationHelper(filePath);
 
-        switch (extensionType) {
-            case Excel:
-                return excelHelper.makeInsertSentence(fileResource.getInputStream(), form);
-            case Csv:
-                return csvHelper.makeInsertSentence(fileResource.getInputStream(), form);
-            case Other:
-            default:
-                return "";
-        }
+        return fileInformationHelper.makeInsertSentence(fileResource.getInputStream(), form);
+
     }
 
     /**
@@ -183,6 +139,9 @@ public class DbFileCreateServiceImpl implements DbFileCreateService {
      * @param headerMap ヘッダー情報のマップ
      */
     private void createDBColumnsForm(DBColumnsForm form, Map<Integer, String> headerMap, Resource fileResource) {
+        if (CollectionUtils.isEmpty(headerMap)){
+            return;
+        }
         String simpleFileName = CommonUtils.getResourceSimpleFileName(fileResource);
         // フォームのテーブル名をセット
         form.setTableName(simpleFileName);
