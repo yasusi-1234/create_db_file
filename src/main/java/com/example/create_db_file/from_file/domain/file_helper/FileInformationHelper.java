@@ -8,7 +8,7 @@ import java.util.Map;
 public interface FileInformationHelper {
     Map<Integer, String> analyzeHeader(InputStream in);
 
-    void saveFile(InputStream in, String newFilePath);
+    String saveFile(InputStream in, String newFilePath);
 
     String makeInsertSentence(InputStream in, DBColumnsForm form);
 }

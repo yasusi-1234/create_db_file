@@ -62,13 +62,15 @@ public class ExcelInformationHelper implements FileInformationHelper{
      * @param newFilePath 保存するPath
      */
     @Override
-    public void saveFile(InputStream in, String newFilePath){
+    public String saveFile(InputStream in, String newFilePath){
         try(Workbook workbook = WorkbookFactory.create(in);
             FileOutputStream out = new FileOutputStream(newFilePath)
         ){
             workbook.write(out);
+            return newFilePath.toString();
         }catch (IOException e){
             e.printStackTrace();
+            return "";
         }
     }
 
