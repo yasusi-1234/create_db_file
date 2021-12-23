@@ -44,11 +44,13 @@ public class CsvInformationHelper implements FileInformationHelper {
     }
 
     @Override
-    public void saveFile(InputStream in, String newFilePath){
+    public String saveFile(InputStream in, String newFilePath){
         try(FileOutputStream out = new FileOutputStream(newFilePath)){
             StreamUtils.copy(in, out);
+            return newFilePath.toString();
         } catch (IOException e) {
             e.printStackTrace();
+            return "";
         }
 
     }
