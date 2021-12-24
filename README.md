@@ -152,9 +152,128 @@ data.sqlを作成する際少量のInsert文書く分には特に困りません
 * 今後の改善点など
 
 ```puml
-(A) <-- (B)
-(B) <-- (C)
-(A) <-- (C)
+actor ユーザー
+
+ユーザー -> コントローラー : ホーム画面アクセス
+activate コントローラー
+コントローラー --> ユーザー : ホーム画面View
+deactivate コントローラー
+
+ユーザー -> コントローラー : 添付ファイル送信
+activate コントローラー
+alt 添付ファイル正常な場合
+    コントローラー -> サービス: 添付ファイル保存
+    note top
+      日付日時情報:
+      yyyyMMddHHmmssSSS
+      + ファイル名で保存
+    end note
+    activate サービス
+    サービス --> コントローラー: 保存Path返却
+    deactivate サービス
+    
+    コントローラー -> セッション: 保存Pathを追加
+    activate セッション
+    deactivate セッション
+    コントローラー --> ユーザー: カスタム画面View
+else 添付ファイルが不正な場合
+    コントローラー --> ユーザー: ホーム画面View(エラーメッセージ)
+    note right
+      CSV・Excel形式以外のファイル(サポート外)
+      ヘッダー・データ部分が無いファイル等の場合
+    end note
+deactivate コントローラー
+end
+
+ユーザー -> コントローラー : フォーム入力＆ダウンロードリクエスト
+alt 入力フォームが正常な場合
+    activate コントローラー
+    コントローラー -> セッション: pathの取得リクエスト
+    activate セッション
+    セッション --> コントローラー: ファイルpath返却
+    deactivate セッション
+    コントローラー -> サービス: path&フォーム情報送信
+    activate サービス
+    サービス --> コントローラー: Insert文生成内容返却
+    deactivate サービス
+    コントローラー --> ユーザー: sqlファイルダウンロード
+else 入力フォームが異常な場合
+    コントローラー --> ユーザー: カスタム画面(エラーメッセージ)
+    deactivate コントローラー
+end
+
+ユーザー -> コントローラー : 処理終了
+activate コントローラー
+コントローラー -> セッション: ファイルPath情報削除
+activate セッション
+セッション --> コントローラー: ファイルPath返却
+deactivate セッション
+コントローラー -> コントローラー: 添付保存ファイル削除
+コントローラー --> ユーザー : ホーム画面View(利用サンクスメッセージ)
+deactivate コントローラー
+
+```
+
+```puml
+actor ユーザー
+
+ユーザー -> コントローラー:0から作成ページアクセス
+activate コントローラー
+コントローラー --> ユーザー:0から作成View返却
+deactivate コントローラー
+
+ユーザー -> コントローラー:フォーム追加リクエスト
+alt リクエスト値正常
+    activate コントローラー
+    コントローラー -> フォーム: 個別フォーム情報を加える
+    activate フォーム
+    deactivate フォーム
+    コントローラー --> ユーザー: 0から作成View返却
+else リクエスト値異常
+    コントローラー --> ユーザー: 0から作成View返却(エラーメッセージ)
+    deactivate コントローラー
+end
+
+ユーザー -> コントローラー: ファイル出力リクエスト
+alt リクエスト値異常
+    activate コントローラー
+    note right
+        Excelファイル
+        sqlファイル
+        のいずれか
+    end note
+    コントローラー --> ユーザー: 0から作成View返却(エラーメッセージ)
+else リクエスト値正常
+    alt sqlファイル
+        コントローラー -> サービス: Insert文生成リクエスト
+        activate サービス
+        opt 個別フォームにfirstNameかlastNameが存在する
+            サービス -> データベース
+            activate データベース
+            データベース --> サービス: 名前情報返却
+            deactivate データベース
+        end
+        サービス -> サービス: Insert文生成
+        サービス -> コントローラー: Insert文返却
+        deactivate サービス
+        コントローラー --> ユーザー: Insert文ダウンロード
+    else excelファイル
+        コントローラー -> サービス: Excel生成リクエスト
+        activate サービス
+        opt 個別フォームにfirstNameかlastNameが存在する
+            サービス -> データベース
+            activate データベース
+            データベース --> サービス: 名前情報返却
+            deactivate データベース
+        end
+        サービス -> サービス: Excel用データ生成
+        サービス -> コントローラー: Excel用データ返却
+        deactivate サービス
+        コントローラー --> ユーザー: Excelファイルダウンロード
+        deactivate コントローラー
+    end
+end
+
 ```
 
 ```puml
@@ -181,3 +300,4 @@ HOURS
 MINUTES
 }
 ```
+
