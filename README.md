@@ -276,6 +276,156 @@ end
 
 ```
 
+
+```puml
+package com.example.create_db_file{
+    package from_file{
+
+        package domain{
+            package file_helper{
+                interface FileHelperFactory
+                interface FileInformationHelper
+
+                class FileHelperFactoryImpl implements FileHelperFactory{
+                    - excelHelper: FileInformationHelper
+                    - csvHelper: FileInformationHelper
+                    - noneHelper: FileInformationHelper
+                    + createFileInformationHelper(filename: String): FileInformationHelper
+                }
+
+                class CsvInformationHelper implements FileInformationHelper{
+                    + analyzeHeader(in: InputStream): Map<Integer, String>
+                    + saveFile(in: InputStream, filePath: String): String
+                    + makeInsertSentence(in: InputStream, form: DBColumnsForm): String
+                }
+
+                class ExcelInformationHelper implements FileInformationHelper{
+                    + analyzeHeader(in: InputStream): Map<Integer, String>
+                    + saveFile(in: InputStream, filePath: String): String
+                    + makeInsertSentence(in: InputStream, form: DBColumnsForm): String
+                }
+
+                class NoneHelper implements FileInformationHelper{
+                    + analyzeHeader(in: InputStream): Map<Integer, String>
+                    + saveFile(in: InputStream, filePath: String): String
+                    + makeInsertSentence(in: InputStream, form: DBColumnsForm): String
+                }
+
+                
+            }
+
+            package service{
+                interface DbFileCreateService
+                class DbFileCreateServiceImpl implements DbFileCreateService{
+                    - fileHelperFactory: FileHelperFactory
+                    + findHeader(fileObj: MultipartFile): Map<Integer, String>
+                    + findHeader(filePath: String, form: DBColumnsForm) Map<Integer, String>
+                    + fileToSaveTemporarily(fileObj: MultipartFile) : String
+                    + makeInsertSentence(filePath: String, form: DBColumnsForm): String
+                    - createDbColumnForm(form: DBColumnsForm, headerMap : Map<Integer, String>, fileResource : Resource): void
+                }
+
+                
+            }
+        }
+        package controller{
+            class DbFileCreateController{
+                - dbFileCreateService: DbFileCreateServiceImpl
+                + 様々なGetPostメソッド(): String
+            }
+
+            
+            package form{
+                class DBColumnsForm{
+                    - fileName: String
+                    - tableName: String
+                    - dbColumns: List<DBColumn>
+                    + addDbColumns(dbColumn: DBColumn): boolean
+                    + get()
+                    + set()
+                }
+
+                class DBColumn{
+                    - columnName: String
+                    - columnIndex: Integer
+                    - changeColumnName: String
+                    - type: ColumnType
+                    - include: boolean
+                    + of(columnName: String, columnIndex: Integer): DBColumn
+                    + get()
+                    + set()
+                }
+
+                enum ColumnType{
+                    STRING
+                    NUMBER
+                    NULL
+                }
+
+               
+
+                class OriginalDataFileForm{
+                    - multipartFile: MultipartFile
+                    + getMultipartFile(): MultipartFile
+                    + setMultipartFile(multipartFile: MultipartFile): void
+                }
+            }
+
+
+            package validator{
+                class DBColumnsValidator{
+                    + isValid(): boolean
+                }
+
+                class ExpectedFileValidator{
+                    + isValid(): boolean
+                }
+            }
+        }
+    }
+
+    package session{
+        class UserSession{
+            - temporalFilePath: String
+            + getTemporalFilePath(): String
+            + setTemporalFilePath(filePath: String): void
+        }
+    }
+
+    package file_view{
+        class DataFileView{
+             # renderMergedOutputModel(model, request, response): void
+             - renderInsertFile(model, insertSentence,response): void
+        }
+
+        class ExcelFileView{
+             # buildExcelDocument(model, workbook, request, response): void
+        }
+    }
+}
+
+ExcelInformationHelper <.. FileHelperFactoryImpl
+CsvInformationHelper <.. FileHelperFactoryImpl
+NoneHelper <.. FileHelperFactoryImpl
+
+FileHelperFactoryImpl <-- DbFileCreateServiceImpl
+
+DbFileCreateController --> DbFileCreateServiceImpl
+
+DBColumnsForm o-- DBColumn
+DBColumn o-- ColumnType
+DBColumnsForm <-- DbFileCreateController
+OriginalDataFileForm <-- DbFileCreateController
+
+DbFileCreateController --> UserSession
+ExpectedFileValidator <-- OriginalDataFileForm
+DBColumnsValidator <-- DBColumnsForm
+
+DbFileCreateController --> DataFileView
+DbFileCreateController --> ExcelFileView
+
+```
+
 ```puml
 abstract class AbstractList
 abstract AbstractCollection
