@@ -19,13 +19,13 @@ DB(データベース)のInsert文を作成するWebアプリケーションで�
 * JavaScript
 ### データベース
 * PostgreSQL
-###インフラ
+### インフラ
 * Herokuサーバー
 
 ## 利用方法
 Webページの方に記載しております
 
-##作成した理由・背景
+## 作成した理由・背景
 Spring Boot開発の際、data.sqlというファイルをsrc/main/resources配下に置くことでSpring起動時にデータをテーブルにインサートすることができる大変便利な機能があります。
 
 <br>
