@@ -19,13 +19,13 @@ DB(データベース)のInsert文を作成するWebアプリケーションで�
 * JavaScript
 ### データベース
 * PostgreSQL
-###インフラ
+### インフラ
 * Herokuサーバー
 
 ## 利用方法
 Webページの方に記載しております
 
-##作成した理由・背景
+## 作成した理由・背景
 Spring Boot開発の際、data.sqlというファイルをsrc/main/resources配下に置くことでSpring起動時にデータをテーブルにインサートすることができる大変便利な機能があります。
 
 <br>
@@ -148,312 +148,20 @@ data.sqlを作成する際少量のInsert文書く分には特に困りません
   </tr>
 </table>
 
+## UML
+
+### アプリケーションのユースケース図
+![ユースケース図](uml_img/usecase.png)
+
+### ファイル情報を元にInsert文を出力する機能のシーケンス図
+![ファイルからInsert文を作成するシーケンス図](uml_img/sequence1.png)
+
+### ファイルが無い状態からInsert文を作成する機能のシーケンス図
+![ファイルが無い状態からInsert文作成するシーケンス図](uml_img/sequence2.png)
+
+### ファイル情報を元にInsert文を出力する機能のクラス図(※ 現状テスト段階)
+![ファイルからInsert文を作成する関連のクラス図](uml_img/class.png)
 ## その他
 * 今後の改善点など
 
-```puml
-actor ユーザー
-
-ユーザー -> コントローラー : ホーム画面アクセス
-activate コントローラー
-コントローラー --> ユーザー : ホーム画面View
-deactivate コントローラー
-
-ユーザー -> コントローラー : 添付ファイル送信
-activate コントローラー
-alt 添付ファイル正常な場合
-    コントローラー -> サービス: 添付ファイル保存
-    note top
-      日付日時情報:
-      yyyyMMddHHmmssSSS
-      + ファイル名で保存
-    end note
-    activate サービス
-    サービス --> コントローラー: 保存Path返却
-    deactivate サービス
-    
-    コントローラー -> セッション: 保存Pathを追加
-    activate セッション
-    deactivate セッション
-    コントローラー --> ユーザー: カスタム画面View
-else 添付ファイルが不正な場合
-    コントローラー --> ユーザー: ホーム画面View(エラーメッセージ)
-    note right
-      CSV・Excel形式以外のファイル(サポート外)
-      ヘッダー・データ部分が無いファイル等の場合
-    end note
-deactivate コントローラー
-end
-
-ユーザー -> コントローラー : フォーム入力＆ダウンロードリクエスト
-alt 入力フォームが正常な場合
-    activate コントローラー
-    コントローラー -> セッション: pathの取得リクエスト
-    activate セッション
-    セッション --> コントローラー: ファイルpath返却
-    deactivate セッション
-    コントローラー -> サービス: path&フォーム情報送信
-    activate サービス
-    サービス --> コントローラー: Insert文生成内容返却
-    deactivate サービス
-    コントローラー --> ユーザー: sqlファイルダウンロード
-else 入力フォームが異常な場合
-    コントローラー --> ユーザー: カスタム画面(エラーメッセージ)
-    deactivate コントローラー
-end
-
-ユーザー -> コントローラー : 処理終了
-activate コントローラー
-コントローラー -> セッション: ファイルPath情報削除
-activate セッション
-セッション --> コントローラー: ファイルPath返却
-deactivate セッション
-コントローラー -> コントローラー: 添付保存ファイル削除
-コントローラー --> ユーザー : ホーム画面View(利用サンクスメッセージ)
-deactivate コントローラー
-
-```
-
-```puml
-actor ユーザー
-
-ユーザー -> コントローラー:0から作成ページアクセス
-activate コントローラー
-コントローラー --> ユーザー:0から作成View返却
-deactivate コントローラー
-
-ユーザー -> コントローラー:フォーム追加リクエスト
-alt リクエスト値正常
-    activate コントローラー
-    コントローラー -> フォーム: 個別フォーム情報を加える
-    activate フォーム
-    deactivate フォーム
-    コントローラー --> ユーザー: 0から作成View返却
-else リクエスト値異常
-    コントローラー --> ユーザー: 0から作成View返却(エラーメッセージ)
-    deactivate コントローラー
-end
-
-ユーザー -> コントローラー: ファイル出力リクエスト
-alt リクエスト値異常
-    activate コントローラー
-    note right
-        Excelファイル
-        sqlファイル
-        のいずれか
-    end note
-    コントローラー --> ユーザー: 0から作成View返却(エラーメッセージ)
-else リクエスト値正常
-    alt sqlファイル
-        コントローラー -> サービス: Insert文生成リクエスト
-        activate サービス
-        opt 個別フォームにfirstNameかlastNameが存在する
-            サービス -> データベース
-            activate データベース
-            データベース --> サービス: 名前情報返却
-            deactivate データベース
-        end
-        サービス -> サービス: Insert文生成
-        サービス -> コントローラー: Insert文返却
-        deactivate サービス
-        コントローラー --> ユーザー: Insert文ダウンロード
-    else excelファイル
-        コントローラー -> サービス: Excel生成リクエスト
-        activate サービス
-        opt 個別フォームにfirstNameかlastNameが存在する
-            サービス -> データベース
-            activate データベース
-            データベース --> サービス: 名前情報返却
-            deactivate データベース
-        end
-        サービス -> サービス: Excel用データ生成
-        サービス -> コントローラー: Excel用データ返却
-        deactivate サービス
-        コントローラー --> ユーザー: Excelファイルダウンロード
-        deactivate コントローラー
-    end
-end
-
-```
-
-
-```puml
-package com.example.create_db_file{
-    package from_file{
-
-        package domain{
-            package file_helper{
-                interface FileHelperFactory
-                interface FileInformationHelper
-
-                class FileHelperFactoryImpl implements FileHelperFactory{
-                    - excelHelper: FileInformationHelper
-                    - csvHelper: FileInformationHelper
-                    - noneHelper: FileInformationHelper
-                    + createFileInformationHelper(filename: String): FileInformationHelper
-                }
-
-                class CsvInformationHelper implements FileInformationHelper{
-                    + analyzeHeader(in: InputStream): Map<Integer, String>
-                    + saveFile(in: InputStream, filePath: String): String
-                    + makeInsertSentence(in: InputStream, form: DBColumnsForm): String
-                }
-
-                class ExcelInformationHelper implements FileInformationHelper{
-                    + analyzeHeader(in: InputStream): Map<Integer, String>
-                    + saveFile(in: InputStream, filePath: String): String
-                    + makeInsertSentence(in: InputStream, form: DBColumnsForm): String
-                }
-
-                class NoneHelper implements FileInformationHelper{
-                    + analyzeHeader(in: InputStream): Map<Integer, String>
-                    + saveFile(in: InputStream, filePath: String): String
-                    + makeInsertSentence(in: InputStream, form: DBColumnsForm): String
-                }
-
-                
-            }
-
-            package service{
-                interface DbFileCreateService
-                class DbFileCreateServiceImpl implements DbFileCreateService{
-                    - fileHelperFactory: FileHelperFactory
-                    + findHeader(fileObj: MultipartFile): Map<Integer, String>
-                    + findHeader(filePath: String, form: DBColumnsForm) Map<Integer, String>
-                    + fileToSaveTemporarily(fileObj: MultipartFile) : String
-                    + makeInsertSentence(filePath: String, form: DBColumnsForm): String
-                    - createDbColumnForm(form: DBColumnsForm, headerMap : Map<Integer, String>, fileResource : Resource): void
-                }
-
-                
-            }
-        }
-        package controller{
-            class DbFileCreateController{
-                - dbFileCreateService: DbFileCreateServiceImpl
-                + 様々なGetPostメソッド(): String
-            }
-
-            
-            package form{
-                class DBColumnsForm{
-                    - fileName: String
-                    - tableName: String
-                    - dbColumns: List<DBColumn>
-                    + addDbColumns(dbColumn: DBColumn): boolean
-                    + get()
-                    + set()
-                }
-
-                class DBColumn{
-                    - columnName: String
-                    - columnIndex: Integer
-                    - changeColumnName: String
-                    - type: ColumnType
-                    - include: boolean
-                    + of(columnName: String, columnIndex: Integer): DBColumn
-                    + get()
-                    + set()
-                }
-
-                enum ColumnType{
-                    STRING
-                    NUMBER
-                    NULL
-                }
-
-               
-
-                class OriginalDataFileForm{
-                    - multipartFile: MultipartFile
-                    + getMultipartFile(): MultipartFile
-                    + setMultipartFile(multipartFile: MultipartFile): void
-                }
-            }
-
-
-            package validator{
-                class DBColumnsValidator{
-                    + isValid(): boolean
-                }
-
-                class ExpectedFileValidator{
-                    + isValid(): boolean
-                }
-            }
-        }
-    }
-
-    package session{
-        class UserSession{
-            - temporalFilePath: String
-            + getTemporalFilePath(): String
-            + setTemporalFilePath(filePath: String): void
-        }
-    }
-
-    package file_view{
-        class DataFileView{
-             # renderMergedOutputModel(model, request, response): void
-             - renderInsertFile(model, insertSentence,response): void
-        }
-
-        class ExcelFileView{
-             # buildExcelDocument(model, workbook, request, response): void
-        }
-    }
-}
-
-ExcelInformationHelper <.. FileHelperFactoryImpl
-CsvInformationHelper <.. FileHelperFactoryImpl
-NoneHelper <.. FileHelperFactoryImpl
-
-FileHelperFactoryImpl <-- DbFileCreateServiceImpl
-
-DbFileCreateController --> DbFileCreateServiceImpl
-
-DBColumnsForm o-- DBColumn
-DBColumn o-- ColumnType
-DBColumnsForm <-- DbFileCreateController
-OriginalDataFileForm <-- DbFileCreateController
-
-DbFileCreateController --> UserSession
-ExpectedFileValidator <-- OriginalDataFileForm
-DBColumnsValidator <-- DBColumnsForm
-
-DbFileCreateController --> DataFileView
-DbFileCreateController --> ExcelFileView
-
-```
-
-```puml
-left to right direction
-
-:ユーザー : as user
-
-package Insert文ダウンロード{
-"ファイル情報から\n Insert文ダウンロード" as (download)
-"0から\n Insert文ダウンロード" as (download_2)
-
-user --> (download)
-(download) <. (ファイル添付) : include
-(download) <. (出力カスタマイズ) : include
-
-user --> (download_2)
-(download_2) <. (独自フォーム作成) :include
-(download_2) <. (出力カスタマイズ2) : include
-
-}
-
-package 問合せ{
-"application問合せ" as (help)
-user --> (help)
-
-}
-```
-
-![ユースケース図](uml_img/usecase.png)
-![ファイルからInsert文を作成するシーケンス図](uml_img/sequence1.png)
-![ファイルが無い状態からInsert文作成するシーケンス図](uml_img/sequence2.png)
-![ファイルからInsert文を作成する関連のクラス図](uml_img/class.png)
 
