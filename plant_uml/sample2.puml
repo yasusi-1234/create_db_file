@@ -1,0 +1,60 @@
+@startuml
+actor ユーザー
+
+ユーザー -> コントローラー:0から作成ページアクセス
+activate コントローラー
+コントローラー --> ユーザー:0から作成View返却
+deactivate コントローラー
+
+ユーザー -> コントローラー:フォーム追加リクエスト
+alt リクエスト値正常
+    activate コントローラー
+    コントローラー -> フォーム: 個別フォーム情報を加える
+    activate フォーム
+    deactivate フォーム
+    コントローラー --> ユーザー: 0から作成View返却
+else リクエスト値異常
+    コントローラー --> ユーザー: 0から作成View返却(エラーメッセージ)
+    deactivate コントローラー
+end
+
+ユーザー -> コントローラー: ファイル出力リクエスト
+alt リクエスト値異常
+    activate コントローラー
+    note right
+        Excelファイル
+        sqlファイル
+        のいずれか
+    end note
+    コントローラー --> ユーザー: 0から作成View返却(エラーメッセージ)
+else リクエスト値正常
+    alt sqlファイル
+        コントローラー -> サービス: Insert文生成リクエスト
+        activate サービス
+        alt 個別フォームにfirstNameかlastNameが存在する
+            サービス -> データベース
+            activate データベース
+            データベース --> サービス: 名前情報返却
+            deactivate データベース
+        end
+        サービス -> サービス: Insert文生成
+        サービス -> コントローラー: Insert文返却
+        deactivate サービス
+        コントローラー --> ユーザー: Insert文ダウンロード
+    else excelファイル
+        コントローラー -> サービス: Excel生成リクエスト
+        activate サービス
+        alt 個別フォームにfirstNameかlastNameが存在する
+            サービス -> データベース
+            activate データベース
+            データベース --> サービス: 名前情報返却
+            deactivate データベース
+        end
+        サービス -> サービス: Excel用データ生成
+        サービス -> コントローラー: Excel用データ返却
+        deactivate サービス
+        コントローラー --> ユーザー: Excelファイルダウンロード
+        deactivate コントローラー
+    end
+end
+@enduml

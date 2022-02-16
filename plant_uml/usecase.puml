@@ -1,0 +1,26 @@
+@startuml
+left to right direction
+
+:ユーザー : as user
+
+package "Insert文ダウンロード"{
+"ファイル情報から\n Insert文ダウンロード" as (download)
+"0から\n Insert文ダウンロード" as (download_2)
+
+user --> (download)
+(download) <. (ファイル添付) : include
+(download) <. (出力カスタマイズ) : include
+
+user --> (download_2)
+(download_2) <. (独自フォーム作成) :include
+(download_2) <. (出力カスタマイズ2) : include
+
+}
+
+package "問合せ"{
+"application問合せ" as (help)
+user --> (help)
+
+}
+
+@enduml
