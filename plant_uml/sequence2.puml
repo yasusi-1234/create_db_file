@@ -7,19 +7,19 @@ activate コントローラー
 deactivate コントローラー
 
 ユーザー -> コントローラー:フォーム追加リクエスト
-alt リクエスト値正常
+alt#Gold #LightBlue リクエスト値正常
     activate コントローラー
     コントローラー -> フォーム: 個別フォーム情報を加える
     activate フォーム
     deactivate フォーム
     コントローラー --> ユーザー: 0から作成View返却
-else リクエスト値異常
+else #Pink リクエスト値異常
     コントローラー --> ユーザー: 0から作成View返却(エラーメッセージ)
     deactivate コントローラー
 end
 
 ユーザー -> コントローラー: ファイル出力リクエスト
-alt リクエスト値異常
+alt#Gold #Pink リクエスト値異常
     activate コントローラー
     note right
         Excelファイル
@@ -27,8 +27,8 @@ alt リクエスト値異常
         のいずれか
     end note
     コントローラー --> ユーザー: 0から作成View返却(エラーメッセージ)
-else リクエスト値正常
-    alt sqlファイル
+else #LightBlue リクエスト値正常
+    alt#Gold #LightGray sqlファイル
         コントローラー -> サービス: Insert文生成リクエスト
         activate サービス
         opt 個別フォームにfirstNameかlastNameが存在する
@@ -41,7 +41,7 @@ else リクエスト値正常
         サービス -> コントローラー: Insert文返却
         deactivate サービス
         コントローラー --> ユーザー: Insert文ダウンロード
-    else excelファイル
+    else #LightSeaGreen excelファイル
         コントローラー -> サービス: Excel生成リクエスト
         activate サービス
         opt 個別フォームにfirstNameかlastNameが存在する
